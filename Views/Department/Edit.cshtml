@@ -1,0 +1,177 @@
+@model CivicResolve.Models.Department
+@{
+    ViewData["Title"] = $"Edit Department - {Model.Name}";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb small mb-1">
+                    <li class="breadcrumb-item"><a asp-controller="Department" asp-action="Index">Departments</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @Model.Name</li>
+                </ol>
+            </nav>
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+                <div class="card-header bg-primary text-white p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="fw-bold mb-1"><i class="bi bi-pencil-square me-2"></i> Edit Department Details</h3>
+                            <p class="mb-0 text-white-50 small">Update contact persons, responsibilities, and service categories.</p>
+                        </div>
+                        <span class="badge bg-warning text-dark fs-6 font-monospace">@Model.Code</span>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-8">
+                                <label asp-for="Name" class="form-label required">Department Name <span class="text-danger">*</span></label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="Code" class="form-label required">Code <span class="text-danger">*</span></label>
+                                <input asp-for="Code" class="form-control text-uppercase" maxlength="10" />
+                                <span asp-validation-for="Code" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Description" class="form-label">Scope Description</label>
+                                <textarea asp-for="Description" rows="3" class="form-control"></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="HodName" class="form-label required">Head of Department (HOD) <span class="text-danger">*</span></label>
+                                <input asp-for="HodName" class="form-control" />
+                                <span asp-validation-for="HodName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="ContactPhone" class="form-label required">Contact Phone <span class="text-danger">*</span></label>
+                                <input asp-for="ContactPhone" type="tel" maxlength="10" class="form-control" />
+                                <span asp-validation-for="ContactPhone" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="ContactEmail" class="form-label required">Official Email <span class="text-danger">*</span></label>
+                                <input asp-for="ContactEmail" type="email" class="form-control" />
+                                <span asp-validation-for="ContactEmail" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" asp-for="IsActive" id="activeSwitch">
+                                    <label class="form-check-label fw-semibold" for="activeSwitch">Department is Active</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-4 mb-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4">Back to List</a>
+                            <button type="submit" class="btn btn-primary px-5 fw-bold shadow">
+                                <i class="bi bi-save me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Grievance Categories Section -->
+                    <div class="mt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0"><i class="bi bi-tags-fill text-primary me-2"></i> Grievance Categories & SLAs</h5>
+                            <button class="btn btn-sm btn-outline-primary fw-semibold" data-bs-toggle="collapse" data-bs-target="#addCategoryForm">
+                                <i class="bi bi-plus-circle me-1"></i> Add Category
+                            </button>
+                        </div>
+
+                        <!-- Add Category Collapse Form -->
+                        <div class="collapse mb-4" id="addCategoryForm">
+                            <div class="card p-3 bg-light border rounded-3">
+                                <h6 class="fw-bold mb-2">Register New Category under @Model.Name</h6>
+                                <form asp-action="AddCategory" method="post" class="row g-2">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="departmentId" value="@Model.Id" />
+
+                                    <div class="col-md-6">
+                                        <input type="text" name="name" class="form-control form-control-sm" placeholder="Category Name (e.g. Broken Water Pipe)" required />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" name="slaHours" class="form-control" placeholder="SLA Hours" value="48" min="1" max="720" required />
+                                            <span class="input-group-text">Hours</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="submit" class="btn btn-success btn-sm w-100 fw-semibold">
+                                            <i class="bi bi-plus-lg me-1"></i> Add
+                                        </button>
+                                    </div>
+                                    <div class="col-12">
+                                        <input type="text" name="description" class="form-control form-control-sm" placeholder="Optional brief guidance for citizens regarding this category..." />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Categories List Table -->
+                        @if (Model.Categories.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0 small">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Category Name</th>
+                                            <th>SLA Window</th>
+                                            <th>Description</th>
+                                            <th class="text-end">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var cat in Model.Categories)
+                                        {
+                                            <tr>
+                                                <td class="fw-bold text-dark">@cat.Name</td>
+                                                <td>
+                                                    <span class="badge bg-primary">@cat.SlaHours Hours</span>
+                                                </td>
+                                                <td class="text-muted">@(cat.Description ?? "No description provided")</td>
+                                                <td class="text-end">
+                                                    <form asp-action="DeleteCategory" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to remove category: @cat.Name?');">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="categoryId" value="@cat.Id" />
+                                                        <input type="hidden" name="departmentId" value="@Model.Id" />
+                                                        <button type="submit" class="btn btn-outline-danger btn-xs" title="Remove Category">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="p-3 text-center text-muted border rounded-3 bg-light">
+                                <span class="small">No categories configured yet for this department. Click "Add Category" above.</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

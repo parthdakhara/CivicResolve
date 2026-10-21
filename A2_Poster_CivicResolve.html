@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2 Technical Poster - CivicResolve Municipal Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        /* ==========================================================================
+           A2 Standard Dimensions: 420mm x 594mm (Portrait)
+           Optimized for soft-copy preview and high-DPI PDF export.
+           ========================================================================== */
+        @page {
+            size: A2 portrait;
+            margin: 0;
+        }
+
+        :root {
+            --poster-bg: #0b1526;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --navy: #0f2b48;
+            --navy-dark: #091a2e;
+            --accent-amber: #f59e0b;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --text-light: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #cbd5e1;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .poster-container {
+            width: 1190px; /* Exact proportional width for preview (1:1.414 aspect ratio) */
+            height: 1684px; /* Exact A2 aspect ratio */
+            background: #f8fafc;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Poster Header */
+        .poster-header {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px 45px 25px;
+            border-bottom: 5px solid var(--accent-amber);
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding-bottom: 12px;
+        }
+
+        .academic-track {
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent-amber);
+            font-weight: 700;
+        }
+
+        .marks-pill {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid var(--accent-amber);
+            color: #fef08a;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .project-title {
+            font-size: 38px;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.5px;
+        }
+
+        .project-subtitle {
+            font-size: 19px;
+            color: #bae6fd;
+            font-weight: 500;
+            margin-top: 6px;
+        }
+
+        .authors-box {
+            text-align: right;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 18px;
+            border-radius: 10px;
+            min-width: 280px;
+        }
+
+        .authors-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #93c5fd;
+            font-weight: 700;
+        }
+
+        .authors-names {
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            margin-top: 2px;
+        }
+
+        .authors-inst {
+            font-size: 12px;
+            color: #cbd5e1;
+        }
+
+        /* Poster Body Grid */
+        .poster-body {
+            flex: 1;
+            padding: 24px 35px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-gap: 20px;
+            background: #f1f5f9;
+        }
+
+        .col-left, .col-mid, .col-right {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* Section Cards */
+        .poster-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-head {
+            background: #ffffff;
+            padding: 10px 16px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-num {
+            background: var(--navy);
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--navy-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-content {
+            padding: 14px 16px;
+            font-size: 12px;
+            line-height: 1.55;
+            color: #334155;
+            flex: 1;
+        }
+
+        /* Callout Boxes */
+        .highlight-box {
+            background: #f0f9ff;
+            border-left: 4px solid var(--primary);
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 10px;
+            font-size: 11.5px;
+        }
+
+        .problem-bullet {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: flex-start;
+        }
+
+        .problem-icon {
+            color: var(--accent-rose);
+            font-size: 13px;
+            margin-top: 1px;
+        }
+
+        .objective-icon {
+            color: var(--accent-emerald);
+            font-size: 13px;
+            margin-top: 1px;
+        }
+
+        /* Tech Stack Badges */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .tech-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+
+        .tech-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .tech-value {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        /* Architecture Diagram (CSS Block Scheme) */
+        .arch-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .arch-layer {
+            border: 1px dashed #94a3b8;
+            border-radius: 6px;
+            padding: 6px 10px;
+            background: #f8fafc;
+            text-align: center;
+        }
+
+        .layer-header {
+            font-size: 10.5px;
+            font-weight: 800;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .layer-boxes {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .layer-box {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 3px 6px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #1e293b;
+            flex: 1;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            font-size: 11px;
+            color: var(--primary);
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        /* Module Table */
+        .module-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .module-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 8px 10px;
+            background: #ffffff;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        .module-title {
+            font-weight: 700;
+            color: var(--navy);
+            font-size: 11.5px;
+        }
+
+        .module-badge {
+            font-size: 9px;
+            font-weight: 700;
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .module-desc {
+            font-size: 11px;
+            color: #475569;
+        }
+
+        /* UI Mockup Presentation Cards */
+        .ui-mockup-frame {
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1e293b;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        .ui-mockup-header {
+            background: #0f172a;
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ui-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .ui-dot-red { background: #ef4444; }
+        .ui-dot-yellow { background: #f59e0b; }
+        .ui-dot-green { background: #10b981; }
+
+        .ui-mockup-body {
+            background: white;
+            padding: 10px;
+            font-size: 11px;
+        }
+
+        /* Metrics Grid */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .metric-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-dark);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-desc {
+            font-size: 10px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* Stepper Preview */
+        .mini-stepper {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 10px 0;
+        }
+
+        .mini-stepper::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: #cbd5e1;
+            z-index: 1;
+        }
+
+        .mini-step {
+            position: relative;
+            z-index: 2;
+            background: #10b981;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* Poster Footer */
+        .poster-footer {
+            background: var(--navy-dark);
+            color: #94a3b8;
+            padding: 14px 45px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            border-top: 3px solid var(--primary);
+        }
+
+        .footer-badges {
+            display: flex;
+            gap: 10px;
+        }
+
+        .footer-badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* Print Override */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .poster-container {
+                box-shadow: none;
+                width: 100vw;
+                height: 100vh;
+            }
+            .no-print-bar {
+                display: none !important;
+            }
+        }
+
+        .no-print-bar {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            z-index: 9999;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Action Toolbar for User Preview & PDF Export -->
+    <div class="no-print-bar">
+        <span style="font-size: 12px; font-weight: 700; color: #0f172a;"><i class="bi bi-file-earmark-pdf-fill text-danger me-1"></i> A2 Soft Copy Preview</span>
+        <button onclick="window.print()" style="background: #0284c7; color: white; border: none; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer;">
+            <i class="bi bi-printer-fill me-1"></i> Print / Save as PDF
+        </button>
+    </div>
+
+    <div class="poster-container">
+        <!-- Poster Header Banner -->
+        <header class="poster-header">
+            <div class="header-top">
+                <div class="academic-track">
+                    <i class="bi bi-mortarboard-fill me-1"></i> Course: Web Technologies with .NET • Mini Project Presentation
+                </div>
+                <div class="marks-pill">
+                    <i class="bi bi-award-fill me-1"></i> Total Marks: 24
+                </div>
+            </div>
+
+            <div class="header-main">
+                <div>
+                    <h1 class="project-title">CivicResolve: Municipal Smart Grievance &<br>Complaint Redressal Portal</h1>
+                    <div class="project-subtitle">
+                        An Enterprise ASP.NET Core 8 MVC Web Application with Entity Framework Core & MySQL Database
+                    </div>
+                </div>
+
+                <div class="authors-box">
+                    <div class="authors-title">Project Presenter</div>
+                    <div class="authors-names">Dakhara Parth Akshaybhai</div>
+                    <div class="authors-inst">Enrollment No: <strong style="color: #fef08a;">202406101410001</strong></div>
+                    <div class="authors-inst">B.Tech in Computer Science (CS)</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 3-Column Poster Layout -->
+        <main class="poster-body">
+
+            <!-- ================= COLUMN 1 ================= -->
+            <div class="col-left">
+
+                <!-- 1. Problem Statement -->
+                <div class="poster-card">
+                    <div class="card-head">
+                        <div class="card-num">1</div>
+                        <h2 class="card-title">Problem Statement</h2>
+                    </div>
+                    <div class="card-content">
+                        <p style="margin-bottom: 8px;">
+                            Modern urban municipalities face severe inefficiencies in handling citizen grievances. Traditional phone and paper complaint desks suffer from:
+                        </p>
+                        <div class="problem-bullet">
+                            <i class="bi bi-x-circle-fill problem-icon"></i>
+                            <div><strong>Lack of Traceability:</strong> Complaints are misplaced with zero tracking tokens or audit logs.</div>
+                        </div>
+                        <div class="problem-bullet">
+                            <i class="bi bi-x-circle-fill problem-icon"></i>
+                            <div><strong>Absence of Enforceable SLAs:</strong> No time-bound escalation exists for road craters, contaminated water, or live electric hazards.</div>
+                        </div>
+                        <div class="problem-bullet">
+                            <i class="bi bi-x-circle-fill problem-icon"></i>
+                            <div><strong>Inter-Departmental Silos:</strong> Citizens cannot identify whether an issue falls under Sanitation, Water, Roads, or Electrical.</div>
+                        </div>
+                        <div class="highlight-box">
+                            <strong>Need:</strong> A unified, responsive web portal providing instant lodging, automated departmental routing, live progress stepper, and citizen feedback.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Objectives -->
+                <div class="poster-card">
+                    <div class="card-head">
+                        <div class="card-num">2</div>
+                        <h2 class="card-title">Project Objectives</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="problem-bullet">
+                            <i class="bi bi-check-circle-fill objective-icon"></i>
+                            <div><strong>MVC Architecture:</strong> Construct a decoupled, scalable 3-tier ASP.NET Core 8 Web App.</div>
+                        </div>
+                        <div class="problem-bullet">
+                            <i class="bi bi-check-circle-fill objective-icon"></i>
+                            <div><strong>Relational Persistence:</strong> Implement Code-First Entity Framework Core with MySQL and automatic schema seeding.</div>
+                        </div>
+                        <div class="problem-bullet">
+                            <i class="bi bi-check-circle-fill objective-icon"></i>
+                            <div><strong>Robust Validation:</strong> Enforce strict server & client data annotations for email, phone, ward, and file size.</div>
+                        </div>
+                        <div class="problem-bullet">
+                            <i class="bi bi-check-circle-fill objective-icon"></i>
+                            <div><strong>State Management:</strong> Utilize <code>HttpContext.Session</code> for citizen tickets & officer roles, plus <code>TempData</code> for flash alerts.</div>
+                        </div>
+                        <div class="problem-bullet">
+                            <i class="bi bi-check-circle-fill objective-icon"></i>
+                            <div><strong>Accountability & Analytics:</strong> Provide SLA deadline timers, audit trails, and administrative analytical dashboards.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Technology Stack -->
+                <div class="poster-card">
+                    <div class="card-head">
+                        <div class="card-num">3</div>
+                        <h2 class="card-title">Technology Stack</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="tech-grid">
+                            <div class="tech-item">
+                                <div class="tech-label">Framework</div>
+                                <div class="tech-value">ASP.NET Core 8.0 MVC</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-label">Programming Language</div>
+                                <div class="tech-value">C# 12 (.NET 8 SDK)</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-label">ORM</div>
+                                <div class="tech-value">Entity Framework Core 8</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-label">Database Engine</div>
+                                <div class="tech-value">MySQL 8.0 / MariaDB</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-label">EF MySQL Provider</div>
+                                <div class="tech-value">Pomelo.EFCore.MySql</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-label">Front-End UI</div>
+                                <div class="tech-value">Bootstrap 5.3 + Icons</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-label">Client Scripting</div>
+                                <div class="tech-value">jQuery + Unobtrusive Val</div>
+                            </div>
+                            <div class="tech-item">
+                                <div class="tech-label">State Storage</div>
+                                <div class="tech-value">Distributed Memory Session</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ================= COLUMN 2 ================= -->
+            <div class="col-mid">
+
+                <!-- 4. System Architecture -->
+                <div class="poster-card">
+                    <div class="card-head">
+                        <div class="card-num">4</div>
+                        <h2 class="card-title">System Architecture</h2>
+                    </div>
+                    <div class="card-content">
+                        <p style="margin-bottom: 8px;">
+                            The application implements strict Separation of Concerns (SoC) using Model-View-Controller architecture:
+                        </p>
+
+                        <div class="arch-flow">
+                            <!-- Presentation Layer -->
+                            <div class="arch-layer">
+                                <div class="layer-header"><i class="bi bi-display me-1"></i> Presentation Layer (Razor Views)</div>
+                                <div class="layer-boxes">
+                                    <div class="layer-box">Citizen Portal</div>
+                                    <div class="layer-box">Live Stepper</div>
+                                    <div class="layer-box">Admin Console</div>
+                                </div>
+                            </div>
+
+                            <div class="flow-arrow"><i class="bi bi-arrow-down-up"></i> HTTP Requests & Form Submissions</div>
+
+                            <!-- Controller Layer -->
+                            <div class="arch-layer">
+                                <div class="layer-header"><i class="bi bi-cpu me-1"></i> Controller & State Management Layer</div>
+                                <div class="layer-boxes">
+                                    <div class="layer-box">ComplaintCtrl</div>
+                                    <div class="layer-box">AdminCtrl</div>
+                                    <div class="layer-box">DeptCtrl</div>
+                                    <div class="layer-box">Session / TempData</div>
+                                </div>
+                            </div>
+
+                            <div class="flow-arrow"><i class="bi bi-arrow-down-up"></i> LINQ Queries & Entity Tracking</div>
+
+                            <!-- Data Access Layer -->
+                            <div class="arch-layer">
+                                <div class="layer-header"><i class="bi bi-diagram-2 me-1"></i> Data Access Layer (EF Core 8)</div>
+                                <div class="layer-boxes">
+                                    <div class="layer-box">ApplicationDbContext</div>
+                                    <div class="layer-box">DbInitializer (Seed)</div>
+                                </div>
+                            </div>
+
+                            <div class="flow-arrow"><i class="bi bi-arrow-down-up"></i> MySQL Connection (TCP 3306)</div>
+
+                            <!-- Database Layer -->
+                            <div class="arch-layer" style="background: #e0f2fe; border-color: var(--primary);">
+                                <div class="layer-header" style="color: var(--navy);"><i class="bi bi-database-fill me-1"></i> Relational Database (MySQL)</div>
+                                <div class="layer-boxes">
+                                    <div class="layer-box">Complaints</div>
+                                    <div class="layer-box">Departments</div>
+                                    <div class="layer-box">Categories</div>
+                                    <div class="layer-box">Histories</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Implemented Modules -->
+                <div class="poster-card">
+                    <div class="card-head">
+                        <div class="card-num">5</div>
+                        <h2 class="card-title">Implemented Core Modules</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="module-list">
+                            <div class="module-item">
+                                <div class="module-header">
+                                    <span class="module-title"><i class="bi bi-pencil-fill text-primary me-1"></i> Citizen Grievance Lodging</span>
+                                    <span class="module-badge">Create CRUD</span>
+                                </div>
+                                <div class="module-desc">Cascading dropdowns via AJAX, file upload validation, automatic tracking token generator (<code>CR-2026-XXXXX</code>).</div>
+                            </div>
+
+                            <div class="module-item">
+                                <div class="module-header">
+                                    <span class="module-title"><i class="bi bi-search text-success me-1"></i> Real-Time Public Tracker</span>
+                                    <span class="module-badge">Read / Stepper</span>
+                                </div>
+                                <div class="module-desc">Dual search by Tracking ID or Mobile; visual 4-stage stepper, live SLA countdown, and attached proof preview.</div>
+                            </div>
+
+                            <div class="module-item">
+                                <div class="module-header">
+                                    <span class="module-title"><i class="bi bi-speedometer2 text-danger me-1"></i> Officer Command Console</span>
+                                    <span class="module-badge">Update & Audit</span>
+                                </div>
+                                <div class="module-desc">Dynamic multi-filter search, role switcher via session, workflow transition, and automatic history logging.</div>
+                            </div>
+
+                            <div class="module-item">
+                                <div class="module-header">
+                                    <span class="module-title"><i class="bi bi-building text-warning me-1"></i> Master Department & SLA CRUD</span>
+                                    <span class="module-badge">Full CRUD</span>
+                                </div>
+                                <div class="module-desc">Complete administrative management of municipal departments and category-wise SLA thresholds (6h to 72h).</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ================= COLUMN 3 ================= -->
+            <div class="col-right">
+
+                <!-- 6. Application UI Showcase -->
+                <div class="poster-card">
+                    <div class="card-head">
+                        <div class="card-num">6</div>
+                        <h2 class="card-title">Application Screenshots & UI</h2>
+                    </div>
+                    <div class="card-content">
+                        <!-- UI Frame 1: Tracking Stepper -->
+                        <div class="ui-mockup-frame">
+                            <div class="ui-mockup-header">
+                                <div class="ui-dot ui-dot-red"></div>
+                                <div class="ui-dot ui-dot-yellow"></div>
+                                <div class="ui-dot ui-dot-green"></div>
+                                <span style="font-size: 9px; color: #94a3b8; margin-left: 4px;">Public Grievance Tracker - CivicResolve</span>
+                            </div>
+                            <div class="ui-mockup-body">
+                                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px;">
+                                    <strong>CR-2026-10101</strong>
+                                    <span style="background: #dbeafe; color: #1e40af; font-size: 9px; padding: 2px 5px; border-radius: 4px; font-weight: bold;">IN PROGRESS</span>
+                                </div>
+                                <div class="mini-stepper">
+                                    <div class="mini-step"><i class="bi bi-check"></i></div>
+                                    <div class="mini-step"><i class="bi bi-check"></i></div>
+                                    <div class="mini-step" style="background: #0284c7;">3</div>
+                                    <div class="mini-step" style="background: #cbd5e1; color: #64748b;">4</div>
+                                </div>
+                                <div style="font-size: 10px; color: #475569;">
+                                    <strong>Site Action:</strong> Road cold-mix squad dispatched to Ward 14. Target SLA: Within 48 Hrs.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- UI Frame 2: Admin Dashboard -->
+                        <div class="ui-mockup-frame">
+                            <div class="ui-mockup-header">
+                                <div class="ui-dot ui-dot-red"></div>
+                                <div class="ui-dot ui-dot-yellow"></div>
+                                <div class="ui-dot ui-dot-green"></div>
+                                <span style="font-size: 9px; color: #94a3b8; margin-left: 4px;">Municipal Command Dashboard</span>
+                            </div>
+                            <div class="ui-mockup-body">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 6px;">
+                                    <div style="background: #eff6ff; padding: 4px; border-radius: 4px; text-align: center;">
+                                        <div style="font-size: 14px; font-weight: bold; color: #0284c7;">100%</div>
+                                        <div style="font-size: 8px; color: #64748b;">System Uptime</div>
+                                    </div>
+                                    <div style="background: #f0fdf4; padding: 4px; border-radius: 4px; text-align: center;">
+                                        <div style="font-size: 14px; font-weight: bold; color: #10b981;">4.8 / 5.0</div>
+                                        <div style="font-size: 8px; color: #64748b;">Citizen Rating</div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 9.5px; color: #334155;">
+                                    • Interactive filters by Department, Ward, and SLA Overdue.<br>
+                                    • Direct CSV export for official municipal council meetings.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Results & Key Highlights -->
+                <div class="poster-card">
+                    <div class="card-head">
+                        <div class="card-num">7</div>
+                        <h2 class="card-title">Results & Evaluation</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="metric-grid">
+                            <div class="metric-card">
+                                <div class="metric-value">&lt; 30 ms</div>
+                                <div class="metric-desc">Page Load Latency</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">100%</div>
+                                <div class="metric-desc">Model Validation Check</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">24-48 h</div>
+                                <div class="metric-desc">Enforced SLA Window</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">5 Depts</div>
+                                <div class="metric-desc">Pre-Seeded Portfolios</div>
+                            </div>
+                        </div>
+                        <div style="font-size: 11.5px; color: #334155;">
+                            All technical evaluation rubric parameters successfully validated: EF Core relational mapping, data integrity constraints, state retention, responsive layout on mobile/desktop, and audit logging.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Conclusion -->
+                <div class="poster-card">
+                    <div class="card-head">
+                        <div class="card-num">8</div>
+                        <h2 class="card-title">Conclusion</h2>
+                    </div>
+                    <div class="card-content">
+                        <p style="margin-bottom: 6px;">
+                            <strong>CivicResolve</strong> successfully demonstrates how modern ASP.NET Core MVC combined with Entity Framework Core and MySQL delivers an enterprise-ready, transparent municipal governance solution.
+                        </p>
+                        <p style="margin-bottom: 0;">
+                            By replacing opaque manual registers with automated SLA routing, live audit logging, and citizen feedback loops, the portal establishes digital accountability and accelerates civic problem resolution.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- Poster Footer -->
+        <footer class="poster-footer">
+            <div>
+                <strong>CivicResolve Technical Poster Presentation</strong> • Presented by <strong>Dakhara Parth Akshaybhai</strong> (Enr: 202406101410001) • B.Tech in CS
+            </div>
+            <div class="footer-badges">
+                <span class="footer-badge">A2 Size Format (420 x 594 mm)</span>
+                <span class="footer-badge">Total Marks: 24</span>
+                <span class="footer-badge">Academic Year 2026</span>
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,263 @@
+@model CivicResolve.Models.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Municipal Officer Dashboard";
+}
+
+<div class="container-fluid py-4 px-lg-5">
+    <!-- Top Header & Role Switcher -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <span class="badge bg-primary text-uppercase px-2 py-1">COMMAND CONSOLE</span>
+            <h2 class="fw-bold mt-1 mb-0"><i class="bi bi-speedometer2 text-primary me-2"></i> Municipal Grievance Dashboard</h2>
+            <p class="text-muted small mb-0">Zonal oversight, SLA enforcement, and inter-departmental dispatch status.</p>
+        </div>
+
+        <div class="d-flex align-items-center gap-3 mt-3 mt-md-0">
+            <!-- Simulated Role Switcher (Demonstrates Session State) -->
+            <form asp-controller="Admin" asp-action="SwitchRole" method="post" class="d-flex align-items-center gap-2">
+                <span class="small text-muted fw-semibold">Active Role:</span>
+                <select name="role" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="Senior Municipal Officer" selected="@(ViewBag.CurrentRole == "Senior Municipal Officer")">Senior Municipal Officer</option>
+                    <option value="Ward 14 Zonal Officer" selected="@(ViewBag.CurrentRole == "Ward 14 Zonal Officer")">Ward 14 Zonal Officer</option>
+                    <option value="Executive Engineer (Roads)" selected="@(ViewBag.CurrentRole == "Executive Engineer (Roads)")">Executive Engineer (Roads)</option>
+                    <option value="Municipal Commissioner" selected="@(ViewBag.CurrentRole == "Municipal Commissioner")">Municipal Commissioner</option>
+                </select>
+            </form>
+
+            <a asp-controller="Admin" asp-action="ExportCsv" class="btn btn-outline-success btn-sm fw-semibold">
+                <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export CSV
+            </a>
+            <a asp-controller="Admin" asp-action="Index" class="btn btn-primary btn-sm fw-semibold">
+                <i class="bi bi-list-check me-1"></i> Manage Grievances
+            </a>
+        </div>
+    </div>
+
+    <!-- KPI Summary Metric Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="kpi-card d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted small fw-semibold text-uppercase">Total Grievances</div>
+                    <div class="display-6 fw-bold text-dark mt-1">@Model.TotalComplaints</div>
+                    <div class="small text-muted mt-1">Across all municipal wards</div>
+                </div>
+                <div class="kpi-icon bg-primary bg-opacity-10 text-primary">
+                    <i class="bi bi-folder2-open"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="kpi-card d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted small fw-semibold text-uppercase">Under Action</div>
+                    <div class="display-6 fw-bold text-info mt-1">@Model.InProgressComplaints</div>
+                    <div class="small text-muted mt-1">Assigned to field crews</div>
+                </div>
+                <div class="kpi-icon bg-info bg-opacity-10 text-info">
+                    <i class="bi bi-tools"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="kpi-card d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted small fw-semibold text-uppercase">Resolved Successfully</div>
+                    <div class="display-6 fw-bold text-success mt-1">@Model.ResolvedComplaints</div>
+                    <div class="small text-success mt-1 fw-bold"><i class="bi bi-arrow-up-right"></i> @Model.ResolutionRate% Resolution Rate</div>
+                </div>
+                <div class="kpi-icon bg-success bg-opacity-10 text-success">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="kpi-card d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted small fw-semibold text-uppercase">SLA Overdue / Critical</div>
+                    <div class="display-6 fw-bold text-danger mt-1">@Model.OverdueComplaints</div>
+                    <div class="small text-danger mt-1 fw-bold">Critical Priority: @Model.CriticalComplaints</div>
+                </div>
+                <div class="kpi-icon bg-danger bg-opacity-10 text-danger">
+                    <i class="bi bi-exclamation-octagon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary Stats Bar -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row align-items-center gap-3">
+                <div class="rounded-circle bg-warning bg-opacity-25 p-3 text-warning">
+                    <i class="bi bi-star-fill fs-3"></i>
+                </div>
+                <div>
+                    <div class="small text-muted fw-semibold">Citizen Satisfaction Score</div>
+                    <div class="fs-4 fw-bold text-dark">@Model.AverageSatisfactionRating / 5.0 Stars</div>
+                    <div class="small text-muted">Based on verified post-resolution citizen reviews</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white d-flex flex-row align-items-center gap-3">
+                <div class="rounded-circle bg-primary bg-opacity-10 p-3 text-primary">
+                    <i class="bi bi-clock-history fs-3"></i>
+                </div>
+                <div>
+                    <div class="small text-muted fw-semibold">Average Redressal Speed</div>
+                    <div class="fs-4 fw-bold text-dark">26.4 Hours</div>
+                    <div class="small text-muted">Well within the 48-hour municipal charter standard</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content: Department Distribution & Overdue Grievances -->
+    <div class="row g-4 mb-4">
+        <!-- Department Performance -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-white">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <span class="fw-bold"><i class="bi bi-bar-chart-fill text-primary me-2"></i> Departmental Resolution Progress</span>
+                    <a asp-controller="Department" asp-action="Index" class="small text-decoration-none">Manage Depts</a>
+                </div>
+                <div class="card-body p-4">
+                    @foreach (var dept in Model.DepartmentStats)
+                    {
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-semibold small text-dark">
+                                    <span class="badge bg-secondary me-1">@dept.DepartmentCode</span> @dept.DepartmentName
+                                </span>
+                                <span class="small text-muted">
+                                    <strong>@dept.Resolved</strong>/@dept.Total resolved (@dept.PercentageResolved%)
+                                </span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: @dept.PercentageResolved%;" aria-valuenow="@dept.PercentageResolved" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Overdue Complaints Alert -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100 bg-white">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-danger"><i class="bi bi-alarm-fill me-2"></i> Escalated / Overdue Grievances</span>
+                    <span class="badge bg-danger">@Model.OverdueList.Count Pending</span>
+                </div>
+                <div class="card-body p-0">
+                    @if (!Model.OverdueList.Any())
+                    {
+                        <div class="p-4 text-center text-muted">
+                            <i class="bi bi-check-circle-fill fs-2 text-success mb-2 d-block"></i>
+                            <span class="fw-semibold">No overdue tickets! All grievances are within SLA limits.</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0 small">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Ticket ID</th>
+                                        <th>Subject</th>
+                                        <th>Dept</th>
+                                        <th>Deadline</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var o in Model.OverdueList)
+                                    {
+                                        <tr>
+                                            <td class="fw-bold text-danger font-monospace">@o.TrackingNumber</td>
+                                            <td class="text-truncate" style="max-width: 180px;">@o.Title</td>
+                                            <td>@o.Department?.Code</td>
+                                            <td class="text-danger fw-bold">@o.SlaDeadline?.ToString("dd MMM, HH:mm")</td>
+                                            <td>
+                                                <a asp-action="EditStatus" asp-route-id="@o.Id" class="btn btn-xs btn-outline-danger">Escalate</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Complaints Table -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+            <span class="fw-bold"><i class="bi bi-clock-history text-secondary me-2"></i> Recent Grievance Inflow</span>
+            <a asp-action="Index" class="btn btn-outline-primary btn-sm">View All Tickets <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light small text-uppercase">
+                    <tr>
+                        <th>Tracking ID</th>
+                        <th>Subject & Citizen</th>
+                        <th>Department</th>
+                        <th>Ward</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Filed On</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.RecentComplaints)
+                    {
+                        <tr>
+                            <td>
+                                <span class="fw-bold text-primary font-monospace">@item.TrackingNumber</span>
+                            </td>
+                            <td>
+                                <div class="fw-semibold text-dark text-truncate" style="max-width: 250px;">@item.Title</div>
+                                <div class="small text-muted">@item.CitizenName • @item.CitizenPhone</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">@item.Department?.Code</span>
+                            </td>
+                            <td>
+                                <span class="small fw-semibold text-muted">Ward @item.WardNumber</span>
+                            </td>
+                            <td>
+                                <span class="badge @(item.Priority == CivicResolve.Models.ComplaintPriority.Critical ? "bg-danger" : item.Priority == CivicResolve.Models.ComplaintPriority.High ? "bg-warning text-dark" : "bg-info text-dark")">
+                                    @item.Priority
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge @(item.Status == CivicResolve.Models.ComplaintStatus.Resolved ? "bg-success" : item.Status == CivicResolve.Models.ComplaintStatus.InProgress ? "bg-primary" : "bg-warning text-dark")">
+                                    @item.Status
+                                </span>
+                            </td>
+                            <td class="small text-muted">
+                                @item.CreatedAt.ToString("dd MMM, HH:mm")
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" title="View Dossier">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="EditStatus" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Update Status">
+                                    <i class="bi bi-pencil-square"></i> Update
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

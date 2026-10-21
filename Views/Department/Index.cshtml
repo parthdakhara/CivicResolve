@@ -1,0 +1,128 @@
+@model List<CivicResolve.Models.Department>
+@{
+    ViewData["Title"] = "Municipal Departments";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb small mb-1">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Departments</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0"><i class="bi bi-diagram-3-fill text-primary me-2"></i> Municipal Departments & Service Portfolios</h2>
+            <p class="text-muted small mb-0">Authorized departments responsible for resolving citizen grievances under civic SLAs.</p>
+        </div>
+
+        <div class="mt-3 mt-md-0">
+            <a asp-action="Create" class="btn btn-primary fw-semibold">
+                <i class="bi bi-plus-circle-fill me-1"></i> Register New Department
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var dept in Model)
+        {
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="badge bg-secondary text-uppercase fw-bold me-2">@dept.Code</span>
+                            @if (dept.IsActive)
+                            {
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary-subtle text-secondary border">Deactivated</span>
+                            }
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-light border-0" type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                <li>
+                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@dept.Id">
+                                        <i class="bi bi-pencil-square text-primary me-2"></i> Edit & Manage Categories
+                                    </a>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteDept_@dept.Id">
+                                        <i class="bi bi-trash me-2"></i> Delete Department
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h4 class="fw-bold text-dark mb-2">@dept.Name</h4>
+                    <p class="text-muted small mb-3">@dept.Description</p>
+
+                    <div class="p-3 bg-light rounded-3 border mb-3 small">
+                        <div class="row g-2">
+                            <div class="col-sm-6">
+                                <span class="text-muted d-block">Department Head:</span>
+                                <strong class="text-dark"><i class="bi bi-person-badge text-primary me-1"></i> @dept.HodName</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="text-muted d-block">Contact Phone:</span>
+                                <span class="text-dark"><i class="bi bi-telephone text-success me-1"></i> @dept.ContactPhone</span>
+                            </div>
+                            <div class="col-sm-12">
+                                <span class="text-muted d-block">Official Email:</span>
+                                <span class="text-dark"><i class="bi bi-envelope text-info me-1"></i> @dept.ContactEmail</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto border-top pt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold text-dark">Grievance Categories (@dept.Categories.Count)</span>
+                            <span class="small text-muted">@dept.Complaints.Count Total Grievances Handled</span>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            @foreach (var cat in dept.Categories)
+                            {
+                                <span class="badge bg-white text-dark border shadow-xs" title="SLA: @cat.SlaHours hrs">
+                                    @cat.Name <span class="badge bg-primary ms-1">@cat.SlaHours h</span>
+                                </span>
+                            }
+                        </div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Edit" asp-route-id="@dept.Id" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-gear-fill me-1"></i> Configure Categories
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade text-start" id="deleteDept_@dept.Id" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill me-2"></i> Delete Department</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to remove <strong>@dept.Name (@dept.Code)</strong>?</p>
+                                    <p class="small text-muted mb-0">Note: Departments with active complaint history cannot be deleted directly.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                                    <form asp-action="Delete" asp-route-id="@dept.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-sm">Confirm Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

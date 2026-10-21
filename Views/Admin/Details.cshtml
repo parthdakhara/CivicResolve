@@ -1,0 +1,217 @@
+@model CivicResolve.Models.Complaint
+@{
+    ViewData["Title"] = $"Grievance Dossier - {Model.TrackingNumber}";
+}
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb small mb-1">
+                    <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Dashboard">Admin</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Grievances</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.TrackingNumber</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0">
+                <span class="font-monospace text-primary">@Model.TrackingNumber</span> - Case Dossier
+            </h2>
+        </div>
+
+        <div class="d-flex gap-2 mt-3 mt-md-0">
+            <a asp-action="EditStatus" asp-route-id="@Model.Id" class="btn btn-primary btn-sm fw-semibold">
+                <i class="bi bi-pencil-square me-1"></i> Update Status & Assign
+            </a>
+            <button onclick="window.print()" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-printer me-1"></i> Print Dossier
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Main Column -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-3">
+                    <div class="d-flex gap-2 align-items-center">
+                        <span class="badge @(Model.Status == CivicResolve.Models.ComplaintStatus.Resolved ? "bg-success" : Model.Status == CivicResolve.Models.ComplaintStatus.InProgress ? "bg-primary" : "bg-warning text-dark") fs-6">
+                            @Model.Status
+                        </span>
+                        <span class="badge @(Model.Priority == CivicResolve.Models.ComplaintPriority.Critical ? "bg-danger" : Model.Priority == CivicResolve.Models.ComplaintPriority.High ? "bg-warning text-dark" : "bg-info text-dark")">
+                            Priority: @Model.Priority
+                        </span>
+                        @if (Model.IsOverdue)
+                        {
+                            <span class="badge bg-danger"><i class="bi bi-alarm-fill me-1"></i> SLA Overdue</span>
+                        }
+                    </div>
+                    <div class="small text-muted">
+                        Filed: <strong>@Model.CreatedAt.ToString("dd MMM yyyy, HH:mm")</strong>
+                    </div>
+                </div>
+
+                <h4 class="fw-bold text-dark mb-2">@Model.Title</h4>
+                <div class="p-3 bg-light rounded-3 border mb-4">
+                    <div class="small text-muted fw-bold mb-1">CITIZEN GRIEVANCE DESCRIPTION:</div>
+                    <p class="mb-0 text-dark">@Model.Description</p>
+                </div>
+
+                <!-- Incident Location -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <div class="small text-muted fw-semibold"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Incident Location</div>
+                            <div class="fw-bold text-dark mt-1">Ward @Model.WardNumber</div>
+                            <div class="small text-dark">@Model.Address</div>
+                            @if (!string.IsNullOrEmpty(Model.Landmark))
+                            {
+                                <div class="small text-muted">Landmark: @Model.Landmark</div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <div class="small text-muted fw-semibold"><i class="bi bi-clock-history text-primary me-1"></i> SLA Performance</div>
+                            <div class="mt-1">
+                                <span class="small text-muted">Target Resolution:</span>
+                                <span class="fw-bold @(Model.IsOverdue ? "text-danger" : "text-success")">
+                                    @(Model.SlaDeadline?.ToString("dd MMM yyyy, HH:mm") ?? "N/A")
+                                </span>
+                            </div>
+                            <div class="small text-muted mt-1">
+                                Resolved On: <strong>@(Model.ResolvedAt?.ToString("dd MMM yyyy, HH:mm") ?? "Pending Resolution")</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Official Action & Remarks -->
+                <div class="border rounded-3 p-3 bg-white mb-4">
+                    <h6 class="fw-bold text-primary mb-2"><i class="bi bi-clipboard2-check-fill me-1"></i> Field Inspection & Resolution Remarks</h6>
+                    @if (!string.IsNullOrEmpty(Model.OfficerRemarks))
+                    {
+                        <p class="mb-1 text-dark small">@Model.OfficerRemarks</p>
+                        <div class="small text-muted mt-2">
+                            Assigned Official: <strong>@(string.IsNullOrEmpty(Model.AssignedOfficer) ? "Ward Officer" : Model.AssignedOfficer)</strong>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted small mb-0">No official remarks logged yet.</p>
+                    }
+                </div>
+
+                <!-- Proof Attachment -->
+                @if (!string.IsNullOrEmpty(Model.AttachmentPath))
+                {
+                    <div class="border rounded-3 p-3 bg-white mb-4">
+                        <h6 class="fw-bold mb-2"><i class="bi bi-paperclip me-1"></i> Uploaded Evidence Document</h6>
+                        @if (Model.AttachmentPath.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+                        {
+                            <a href="@Model.AttachmentPath" target="_blank" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Open PDF Document in New Tab
+                            </a>
+                        }
+                        else
+                        {
+                            <img src="@Model.AttachmentPath" alt="Grievance Evidence" class="img-fluid rounded border shadow-sm" style="max-height: 400px;" />
+                        }
+                    </div>
+                }
+
+                <!-- Citizen Feedback -->
+                @if (Model.Feedbacks.Any())
+                {
+                    <div class="border rounded-3 p-3 bg-light">
+                        <h6 class="fw-bold text-warning mb-2"><i class="bi bi-star-fill me-1"></i> Citizen Resolution Feedback</h6>
+                        @foreach (var fb in Model.Feedbacks)
+                        {
+                            <div>
+                                <span class="text-warning">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= fb.Rating) { <i class="bi bi-star-fill"></i> }
+                                        else { <i class="bi bi-star"></i> }
+                                    }
+                                </span>
+                                <span class="fw-bold ms-2">@fb.Rating / 5 Stars</span>
+                                <span class="small text-muted ms-2">submitted on @fb.SubmittedAt.ToString("dd MMM yyyy, HH:mm")</span>
+                                <p class="small text-dark mt-2 mb-0">"@fb.Comments"</p>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Sidebar Details -->
+        <div class="col-lg-4">
+            <!-- Citizen Information Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="bi bi-person-circle text-primary me-2"></i> Complainant Profile</h6>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">Full Name:</span>
+                    <strong class="text-dark">@Model.CitizenName</strong>
+                </div>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">Contact Phone:</span>
+                    <strong class="text-dark"><i class="bi bi-telephone me-1"></i> @Model.CitizenPhone</strong>
+                </div>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">Email Address:</span>
+                    <strong class="text-dark"><i class="bi bi-envelope me-1"></i> @Model.CitizenEmail</strong>
+                </div>
+            </div>
+
+            <!-- Department Assignment Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="bi bi-diagram-3-fill text-warning me-2"></i> Department Assignment</h6>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">Department:</span>
+                    <strong class="text-dark">@Model.Department?.Name (@Model.Department?.Code)</strong>
+                </div>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">Category:</span>
+                    <strong class="text-dark">@Model.Category?.Name</strong>
+                </div>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">Zonal HOD:</span>
+                    <strong class="text-dark">@Model.Department?.HodName</strong>
+                </div>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">Official Email:</span>
+                    <span class="text-dark">@Model.Department?.ContactEmail</span>
+                </div>
+            </div>
+
+            <!-- Audit Trail Timeline -->
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="bi bi-clock-history text-secondary me-2"></i> Status Audit History</h6>
+                @if (Model.StatusHistories.Any())
+                {
+                    <div class="timeline">
+                        @foreach (var hist in Model.StatusHistories)
+                        {
+                            <div class="timeline-item @(hist.NewStatus == CivicResolve.Models.ComplaintStatus.Resolved ? "resolved" : "")">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge bg-secondary small">@hist.NewStatus</span>
+                                    <span class="small text-muted" style="font-size: 0.72rem;">@hist.ChangedAt.ToString("dd MMM, HH:mm")</span>
+                                </div>
+                                <div class="small fw-semibold text-dark">By: @hist.ActionBy</div>
+                                <div class="small text-muted">@hist.Remarks</div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="small text-muted mb-0">No audit logs available.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

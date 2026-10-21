@@ -1,0 +1,247 @@
+@model CivicResolve.Models.ViewModels.ComplaintCreateViewModel
+@{
+    ViewData["Title"] = "Lodge Municipal Grievance";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Header Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb small">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Lodge Grievance</li>
+                </ol>
+            </nav>
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-primary text-white p-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="badge bg-warning text-dark fw-bold mb-2">CITIZEN FORM</span>
+                            <h3 class="fw-bold mb-1"><i class="bi bi-megaphone-fill me-2"></i> Register New Civic Grievance</h3>
+                            <p class="mb-0 text-white-50 small">Provide accurate details to ensure rapid dispatch to the ward maintenance squad.</p>
+                        </div>
+                        <div class="d-none d-md-block text-end">
+                            <i class="bi bi-shield-check display-5 text-white-50"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form asp-controller="Complaint" asp-action="Create" method="post" enctype="multipart/form-data" novalidate id="grievanceForm">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <!-- Section 1: Citizen Contact Details -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                                <i class="bi bi-person-circle text-primary me-2"></i> 1. Citizen Contact Information
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label asp-for="CitizenName" class="form-label required">Full Name <span class="text-danger">*</span></label>
+                                    <input asp-for="CitizenName" class="form-control" placeholder="e.g. Ramesh S. Patil" />
+                                    <span asp-validation-for="CitizenName" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="CitizenEmail" class="form-label required">Email Address <span class="text-danger">*</span></label>
+                                    <input asp-for="CitizenEmail" type="email" class="form-control" placeholder="name@example.com" />
+                                    <span asp-validation-for="CitizenEmail" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="CitizenPhone" class="form-label required">10-Digit Mobile <span class="text-danger">*</span></label>
+                                    <input asp-for="CitizenPhone" type="tel" maxlength="10" class="form-control" placeholder="e.g. 9820123456" />
+                                    <span asp-validation-for="CitizenPhone" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Location Information -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                                <i class="bi bi-geo-alt-fill text-danger me-2"></i> 2. Location & Ward Details
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label asp-for="WardNumber" class="form-label required">Ward / Zone No. (1-150) <span class="text-danger">*</span></label>
+                                    <input asp-for="WardNumber" type="number" min="1" max="150" class="form-control" placeholder="e.g. 14" />
+                                    <span asp-validation-for="WardNumber" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-5">
+                                    <label asp-for="Address" class="form-label required">Incident Address / Street <span class="text-danger">*</span></label>
+                                    <input asp-for="Address" class="form-control" placeholder="e.g. Crossroad 4, Shivaji Nagar" />
+                                    <span asp-validation-for="Address" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="Landmark" class="form-label">Prominent Landmark (Optional)</label>
+                                    <input asp-for="Landmark" class="form-control" placeholder="e.g. Opposite State Bank ATM" />
+                                    <span asp-validation-for="Landmark" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Grievance Classification -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                                <i class="bi bi-diagram-3-fill text-warning me-2"></i> 3. Department & Category Routing
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label asp-for="DepartmentId" class="form-label required">Concerned Department <span class="text-danger">*</span></label>
+                                    <select asp-for="DepartmentId" asp-items="ViewBag.DepartmentList" class="form-select" id="departmentSelect">
+                                        <option value="">-- Choose Department --</option>
+                                    </select>
+                                    <span asp-validation-for="DepartmentId" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="CategoryId" class="form-label required">Grievance Category <span class="text-danger">*</span></label>
+                                    <select asp-for="CategoryId" class="form-select" id="categorySelect" disabled>
+                                        <option value="">-- Select department first --</option>
+                                    </select>
+                                    <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                                    <div id="slaNotice" class="small text-info mt-1" style="display:none;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label asp-for="Priority" class="form-label required">Urgency / Severity Level <span class="text-danger">*</span></label>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" asp-for="Priority" value="Low" id="prioLow">
+                                            <label class="form-check-label" for="prioLow">
+                                                <span class="badge bg-secondary">Low</span> Normal maintenance
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" asp-for="Priority" value="Medium" id="prioMed" checked>
+                                            <label class="form-check-label" for="prioMed">
+                                                <span class="badge bg-info text-dark">Medium</span> Standard civic issue
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" asp-for="Priority" value="High" id="prioHigh">
+                                            <label class="form-check-label" for="prioHigh">
+                                                <span class="badge bg-warning text-dark">High</span> Severe disruption / safety risk
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" asp-for="Priority" value="Critical" id="prioCrit">
+                                            <label class="form-check-label" for="prioCrit">
+                                                <span class="badge bg-danger">Critical</span> Immediate hazard (wire/burst pipe)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="Priority" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 4: Grievance Details & Photo Upload -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                                <i class="bi bi-card-text text-primary me-2"></i> 4. Detailed Description & Attachment
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label asp-for="Title" class="form-label required">Brief Subject / Issue Summary <span class="text-danger">*</span></label>
+                                    <input asp-for="Title" class="form-control" placeholder="e.g. Deep pothole causing skidding near school gate" />
+                                    <span asp-validation-for="Title" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label asp-for="Description" class="form-label required">Detailed Grievance Description <span class="text-danger">*</span></label>
+                                    <textarea asp-for="Description" rows="4" class="form-control" placeholder="Explain the exact location, duration of the issue, and impact on local residents (minimum 20 characters)..."></textarea>
+                                    <span asp-validation-for="Description" class="text-danger small"></span>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label asp-for="Attachment" class="form-label">Upload Proof Image or Document (Optional)</label>
+                                    <input asp-for="Attachment" type="file" class="form-control" accept=".jpg,.jpeg,.png,.pdf" id="attachmentInput" />
+                                    <div class="form-text small text-muted">
+                                        Supported formats: <strong>.JPG, .PNG, .PDF</strong> (Max size: 5 MB). Clear photos accelerate resolution.
+                                    </div>
+                                    <span asp-validation-for="Attachment" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Declaration & Submit -->
+                        <div class="bg-light p-3 rounded-3 mb-4 border">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="declarationCheck" required checked>
+                                <label class="form-check-label small text-muted" for="declarationCheck">
+                                    I certify that the information provided is genuine and accurate to the best of my knowledge. I understand that submitting false or malicious complaints may lead to account debarment under municipal bylaws.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-left me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg px-5 fw-bold shadow">
+                                <i class="bi bi-send-fill me-2"></i> Submit Grievance
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            // Cascading Dropdown: Load categories when department changes
+            $('#departmentSelect').change(function () {
+                var deptId = $(this).val();
+                var $catSelect = $('#categorySelect');
+                var $slaNotice = $('#slaNotice');
+
+                $catSelect.empty();
+                $slaNotice.hide();
+
+                if (deptId) {
+                    $catSelect.prop('disabled', true).append('<option value="">Loading categories...</option>');
+
+                    $.getJSON('/Complaint/GetCategoriesByDepartment', { departmentId: deptId }, function (data) {
+                        $catSelect.empty().append('<option value="">-- Choose Category --</option>');
+                        if (data && data.length > 0) {
+                            $.each(data, function (i, cat) {
+                                $catSelect.append($('<option>', {
+                                    value: cat.id,
+                                    text: cat.name + ' (SLA: ' + cat.slaHours + ' hrs)',
+                                    'data-sla': cat.slaHours,
+                                    'data-desc': cat.description
+                                }));
+                            });
+                            $catSelect.prop('disabled', false);
+                        } else {
+                            $catSelect.append('<option value="">No categories found</option>');
+                        }
+                    });
+                } else {
+                    $catSelect.append('<option value="">-- Select department first --</option>').prop('disabled', true);
+                }
+            });
+
+            // Display SLA info when category is picked
+            $('#categorySelect').change(function () {
+                var selected = $(this).find('option:selected');
+                var sla = selected.data('sla');
+                var desc = selected.data('desc');
+                var $slaNotice = $('#slaNotice');
+
+                if (sla) {
+                    $slaNotice.html('<i class="bi bi-clock-history me-1"></i> <strong>Official SLA:</strong> Resolution expected within <strong>' + sla + ' hours</strong>.' + (desc ? ' <em>(' + desc + ')</em>' : '')).fadeIn();
+                } else {
+                    $slaNotice.hide();
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,87 @@
+@model CivicResolve.Models.Department
+@{
+    ViewData["Title"] = "Register Department";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb small mb-1">
+                    <li class="breadcrumb-item"><a asp-controller="Department" asp-action="Index">Departments</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">New Department</li>
+                </ol>
+            </nav>
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                <div class="card-header bg-primary text-white p-4">
+                    <h3 class="fw-bold mb-1"><i class="bi bi-building-add me-2"></i> Register Municipal Department</h3>
+                    <p class="mb-0 text-white-50 small">Define an official department responsible for handling specific civic sectors.</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-8">
+                                <label asp-for="Name" class="form-label required">Department Name <span class="text-danger">*</span></label>
+                                <input asp-for="Name" class="form-control" placeholder="e.g. Roads & Civil Infrastructure" />
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="Code" class="form-label required">Short Code <span class="text-danger">*</span></label>
+                                <input asp-for="Code" class="form-control text-uppercase" placeholder="e.g. ROADS" maxlength="10" />
+                                <span asp-validation-for="Code" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Description" class="form-label">Scope & Responsibilities</label>
+                                <textarea asp-for="Description" rows="3" class="form-control" placeholder="Briefly describe what civic services this department manages..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="HodName" class="form-label required">Head of Department (HOD) <span class="text-danger">*</span></label>
+                                <input asp-for="HodName" class="form-control" placeholder="e.g. Er. Sunita Rao" />
+                                <span asp-validation-for="HodName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="ContactPhone" class="form-label required">Official Phone (10 digits) <span class="text-danger">*</span></label>
+                                <input asp-for="ContactPhone" type="tel" maxlength="10" class="form-control" placeholder="e.g. 9876543210" />
+                                <span asp-validation-for="ContactPhone" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="ContactEmail" class="form-label required">Official Email Address <span class="text-danger">*</span></label>
+                                <input asp-for="ContactEmail" type="email" class="form-control" placeholder="e.g. roads@municipal.gov.in" />
+                                <span asp-validation-for="ContactEmail" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" asp-for="IsActive" id="activeSwitch" checked>
+                                    <label class="form-check-label fw-semibold" for="activeSwitch">Mark Department as Active</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary btn-lg px-5 fw-bold shadow">
+                                <i class="bi bi-save me-1"></i> Register Department
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

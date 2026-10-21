@@ -1,0 +1,343 @@
+@model CivicResolve.Models.ViewModels.ComplaintTrackViewModel
+@{
+    ViewData["Title"] = "Track Grievance Status";
+    var c = Model.Complaint;
+}
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="text-center max-w-xl mx-auto mb-4">
+        <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill">PUBLIC TRACKING</span>
+        <h2 class="fw-bold mt-2">Real-Time Grievance Tracker</h2>
+        <p class="text-muted">Enter your unique Tracking ID or registered 10-digit mobile number to inspect progress.</p>
+    </div>
+
+    <!-- Search Form -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+                <form asp-controller="Complaint" asp-action="Track" method="get" class="row g-2">
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" name="q" value="@Model.SearchQuery" class="form-control border-start-0 py-2" placeholder="e.g. CR-2026-10101 or 9820123456" required />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                            <i class="bi bi-crosshair me-1"></i> Track
+                        </button>
+                    </div>
+                </form>
+                <div class="text-center mt-2 small text-muted">
+                    <span class="me-2">Try sample IDs:</span>
+                    <a asp-action="Track" asp-route-q="CR-2026-10101" class="badge bg-light text-primary border text-decoration-none">CR-2026-10101</a>
+                    <a asp-action="Track" asp-route-q="CR-2026-10102" class="badge bg-light text-primary border text-decoration-none">CR-2026-10102</a>
+                    <a asp-action="Track" asp-route-q="CR-2026-10103" class="badge bg-light text-primary border text-decoration-none">CR-2026-10103</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Display -->
+    @if (Model.HasSearched && c == null && !Model.RelatedComplaints.Any())
+    {
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                    <div class="text-muted mb-3"><i class="bi bi-search display-3 text-secondary"></i></div>
+                    <h4 class="fw-bold">No Records Found</h4>
+                    <p class="text-muted">We couldn't locate any grievance matching "<strong>@Model.SearchQuery</strong>". Please verify the tracking number or mobile number entered.</p>
+                    <div class="mt-3">
+                        <a asp-controller="Complaint" asp-action="Create" class="btn btn-outline-primary">Lodge New Grievance</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Multiple Complaints Found by Phone -->
+    @if (Model.RelatedComplaints.Count > 1 && c == null)
+    {
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+            <h5 class="fw-bold mb-3"><i class="bi bi-list-nested me-2"></i> Multiple Grievances Found for Mobile (@Model.RelatedComplaints.Count)</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Tracking ID</th>
+                            <th>Subject</th>
+                            <th>Department</th>
+                            <th>Filed On</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.RelatedComplaints)
+                        {
+                            <tr>
+                                <td class="fw-bold text-primary">@item.TrackingNumber</td>
+                                <td>@item.Title</td>
+                                <td>@item.Department?.Name</td>
+                                <td class="small">@item.CreatedAt.ToString("dd MMM yyyy, HH:mm")</td>
+                                <td>
+                                    <span class="badge @(item.Status == CivicResolve.Models.ComplaintStatus.Resolved ? "bg-success" : "bg-warning text-dark")">@item.Status</span>
+                                </td>
+                                <td>
+                                    <a asp-action="Track" asp-route-q="@item.TrackingNumber" class="btn btn-sm btn-outline-primary">View Timeline</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+    <!-- Single Complaint Detail View -->
+    @if (c != null)
+    {
+        <!-- Stepper Visual Progress -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 mb-4 bg-white">
+            <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4">
+                <div>
+                    <span class="badge bg-light text-dark border fs-6 fw-bold me-2">@c.TrackingNumber</span>
+                    <span class="badge @(c.Priority == CivicResolve.Models.ComplaintPriority.Critical ? "bg-danger" : c.Priority == CivicResolve.Models.ComplaintPriority.High ? "bg-warning text-dark" : "bg-info text-dark")">
+                        Priority: @c.Priority
+                    </span>
+                    @if (c.IsOverdue)
+                    {
+                        <span class="badge bg-danger ms-2"><i class="bi bi-exclamation-octagon-fill"></i> SLA Overdue</span>
+                    }
+                </div>
+                <div class="mt-2 mt-md-0">
+                    <span class="small text-muted me-2">Filed on: <strong>@c.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")</strong></span>
+                </div>
+            </div>
+
+            <!-- Stepper Calculation -->
+            @{
+                int currentStep = 1;
+                if (c.Status == CivicResolve.Models.ComplaintStatus.UnderReview) currentStep = 2;
+                else if (c.Status == CivicResolve.Models.ComplaintStatus.Assigned || c.Status == CivicResolve.Models.ComplaintStatus.InProgress) currentStep = 3;
+                else if (c.Status == CivicResolve.Models.ComplaintStatus.Resolved) currentStep = 4;
+                else if (c.Status == CivicResolve.Models.ComplaintStatus.Rejected) currentStep = -1;
+            }
+
+            @if (c.Status == CivicResolve.Models.ComplaintStatus.Rejected)
+            {
+                <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                    <i class="bi bi-x-circle-fill fs-3 me-3"></i>
+                    <div>
+                        <h5 class="alert-heading mb-1 fw-bold">Grievance Rejected / Closed</h5>
+                        <p class="mb-0 small">This grievance could not be processed. Officer Note: @(c.OfficerRemarks ?? "Does not meet municipal jurisdiction criteria.")</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="stepper-wrapper">
+                    <div class="stepper-item @(currentStep > 1 ? "completed" : currentStep == 1 ? "active" : "")">
+                        <div class="step-counter">
+                            @if (currentStep > 1) { <i class="bi bi-check-lg"></i> } else { <span>1</span> }
+                        </div>
+                        <div class="step-name">Submitted</div>
+                        <div class="small text-muted d-none d-md-block">Ticket Registered</div>
+                    </div>
+
+                    <div class="stepper-item @(currentStep > 2 ? "completed" : currentStep == 2 ? "active" : "")">
+                        <div class="step-counter">
+                            @if (currentStep > 2) { <i class="bi bi-check-lg"></i> } else { <span>2</span> }
+                        </div>
+                        <div class="step-name">Under Review</div>
+                        <div class="small text-muted d-none d-md-block">Desk Verification</div>
+                    </div>
+
+                    <div class="stepper-item @(currentStep > 3 ? "completed" : currentStep == 3 ? "active" : "")">
+                        <div class="step-counter">
+                            @if (currentStep > 3) { <i class="bi bi-check-lg"></i> } else { <span>3</span> }
+                        </div>
+                        <div class="step-name">In Progress</div>
+                        <div class="small text-muted d-none d-md-block">Field Action</div>
+                    </div>
+
+                    <div class="stepper-item @(currentStep == 4 ? "completed active" : "")">
+                        <div class="step-counter">
+                            @if (currentStep == 4) { <i class="bi bi-check-lg"></i> } else { <span>4</span> }
+                        </div>
+                        <div class="step-name">Resolved</div>
+                        <div class="small text-muted d-none d-md-block">Site Completed</div>
+                    </div>
+                </div>
+            }
+
+            <!-- Grievance Core Details Grid -->
+            <div class="row g-4 mt-2">
+                <div class="col-lg-8">
+                    <h4 class="fw-bold mb-2">@c.Title</h4>
+                    <p class="text-secondary mb-4 p-3 bg-light rounded-3 border">@c.Description</p>
+
+                    <div class="row g-3 small">
+                        <div class="col-sm-6">
+                            <span class="text-muted d-block">Department:</span>
+                            <strong class="text-dark">@c.Department?.Name (@c.Department?.Code)</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted d-block">Grievance Category:</span>
+                            <strong class="text-dark">@c.Category?.Name</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted d-block">Incident Location:</span>
+                            <strong class="text-dark"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Ward @c.WardNumber, @c.Address</strong>
+                            @if (!string.IsNullOrEmpty(c.Landmark))
+                            {
+                                <span class="d-block text-muted">Near: @c.Landmark</span>
+                            }
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted d-block">Target SLA Deadline:</span>
+                            <strong class="@(c.IsOverdue ? "text-danger" : "text-success")">
+                                <i class="bi bi-clock-history me-1"></i>
+                                @(c.SlaDeadline?.ToString("dd MMM yyyy, hh:mm tt") ?? "Within 48 Hours")
+                                @if (c.IsOverdue)
+                                {
+                                    <span class="badge bg-danger">Breached</span>
+                                }
+                            </strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted d-block">Assigned Field Official:</span>
+                            <strong class="text-dark"><i class="bi bi-person-badge me-1"></i> @(string.IsNullOrEmpty(c.AssignedOfficer) ? "Department Duty Officer" : c.AssignedOfficer)</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted d-block">Complainant Name:</span>
+                            <strong class="text-dark">@c.CitizenName (Ph: @c.CitizenPhone)</strong>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(c.OfficerRemarks))
+                    {
+                        <div class="mt-4 p-3 bg-success bg-opacity-10 border border-success border-opacity-25 rounded-3">
+                            <h6 class="fw-bold text-success mb-1"><i class="bi bi-chat-left-text-fill me-1"></i> Official Action Report / Resolution Note</h6>
+                            <p class="mb-0 text-dark small">@c.OfficerRemarks</p>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(c.AttachmentPath))
+                    {
+                        <div class="mt-4">
+                            <h6 class="fw-bold mb-2"><i class="bi bi-paperclip me-1"></i> Attached Evidence</h6>
+                            @if (c.AttachmentPath.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <a href="@c.AttachmentPath" target="_blank" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-file-earmark-pdf-fill me-1"></i> View Attached PDF Document
+                                </a>
+                            }
+                            else
+                            {
+                                <div class="card p-1 border rounded-3 d-inline-block" style="max-width: 320px;">
+                                    <img src="@c.AttachmentPath" alt="Grievance Attachment" class="img-fluid rounded" />
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Right Column: Status Audit Trail Timeline -->
+                <div class="col-lg-4">
+                    <div class="card bg-light border p-3 rounded-3">
+                        <h6 class="fw-bold mb-3 border-bottom pb-2"><i class="bi bi-clock-history me-1"></i> Action Audit Trail</h6>
+                        @if (c.StatusHistories.Any())
+                        {
+                            <div class="timeline">
+                                @foreach (var hist in c.StatusHistories)
+                                {
+                                    <div class="timeline-item @(hist.NewStatus == CivicResolve.Models.ComplaintStatus.Resolved ? "resolved" : "")">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="badge bg-secondary small">@hist.NewStatus</span>
+                                            <span class="small text-muted" style="font-size: 0.75rem;">@hist.ChangedAt.ToString("dd MMM, HH:mm")</span>
+                                        </div>
+                                        <div class="small fw-semibold text-dark">By: @hist.ActionBy</div>
+                                        <div class="small text-muted">@hist.Remarks</div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted small mb-0">No audit logs recorded yet.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Citizen Satisfaction Rating Section (Appears when Resolved) -->
+            @if (c.Status == CivicResolve.Models.ComplaintStatus.Resolved)
+            {
+                <div class="mt-5 pt-4 border-top">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-star-fill text-warning me-2"></i> Citizen Satisfaction & Feedback</h5>
+
+                    @if (c.Feedbacks.Any())
+                    {
+                        <div class="p-3 bg-light rounded-3 border">
+                            @foreach (var fb in c.Feedbacks)
+                            {
+                                <div class="mb-2">
+                                    <span class="text-warning">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= fb.Rating) { <i class="bi bi-star-fill"></i> }
+                                            else { <i class="bi bi-star"></i> }
+                                        }
+                                    </span>
+                                    <span class="fw-bold ms-2">@fb.Rating / 5 Stars</span>
+                                    <span class="text-muted small ms-2">on @fb.SubmittedAt.ToString("dd MMM yyyy")</span>
+                                </div>
+                                <p class="text-muted mb-0 small">"@fb.Comments"</p>
+                            }
+                        </div>
+                    }
+                    else if (Model.FeedbackForm != null)
+                    {
+                        <div class="card p-4 border rounded-3 bg-white shadow-sm">
+                            <p class="text-muted small mb-3">Your grievance has been marked as <strong>Resolved</strong>. Please rate the promptness and quality of work done by our field crew.</p>
+
+                            <form asp-controller="Complaint" asp-action="Feedback" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="FeedbackForm.ComplaintId" />
+                                <input type="hidden" asp-for="FeedbackForm.TrackingNumber" />
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Overall Rating (1 to 5 Stars):</label>
+                                    <div class="d-flex gap-4">
+                                        @for (int r = 1; r <= 5; r++)
+                                        {
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" asp-for="FeedbackForm.Rating" value="@r" id="star_@r" checked="@(r == 5)">
+                                                <label class="form-check-label small" for="star_@r">
+                                                    @r <i class="bi bi-star-fill text-warning"></i>
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
+                                    <span asp-validation-for="FeedbackForm.Rating" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="FeedbackForm.Comments" class="form-label small fw-bold">Feedback Comments:</label>
+                                    <textarea asp-for="FeedbackForm.Comments" rows="3" class="form-control" placeholder="Share your experience regarding the site repair work..."></textarea>
+                                    <span asp-validation-for="FeedbackForm.Comments" class="text-danger small"></span>
+                                </div>
+
+                                <button type="submit" class="btn btn-success fw-bold px-4">
+                                    <i class="bi bi-check-circle me-1"></i> Submit Citizen Feedback
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

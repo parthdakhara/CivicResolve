@@ -1,0 +1,124 @@
+@model CivicResolve.Models.ViewModels.ComplaintEditViewModel
+@{
+    ViewData["Title"] = $"Update Status - {Model.TrackingNumber}";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <!-- Header -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb small mb-1">
+                    <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Dashboard">Admin</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Index">Grievances</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Update @Model.TrackingNumber</li>
+                </ol>
+            </nav>
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+                <div class="card-header bg-primary text-white p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge bg-warning text-dark fw-bold mb-2">OFFICIAL WORKFLOW</span>
+                            <h3 class="fw-bold mb-0">Update Grievance Status & Officer Remarks</h3>
+                        </div>
+                        <span class="font-monospace fs-5 text-white-50">@Model.TrackingNumber</span>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <!-- Grievance Snapshot -->
+                    <div class="p-3 bg-light rounded-3 border mb-4">
+                        <div class="row g-2 small">
+                            <div class="col-md-8">
+                                <span class="text-muted d-block">Subject:</span>
+                                <strong class="text-dark">@Model.Title</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="text-muted d-block">Complainant:</span>
+                                <strong>@Model.CitizenName (Ph: @Model.CitizenPhone)</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <span class="text-muted d-block">Location:</span>
+                                <span>Ward @Model.WardNumber, @Model.Address</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="text-muted d-block">Target SLA Deadline:</span>
+                                <strong class="text-primary">@(Model.SlaDeadline?.ToString("dd MMM yyyy, HH:mm") ?? "N/A")</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Update Form -->
+                    <form asp-action="EditStatus" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="TrackingNumber" />
+                        <input type="hidden" asp-for="Title" />
+                        <input type="hidden" asp-for="CitizenName" />
+                        <input type="hidden" asp-for="CitizenPhone" />
+                        <input type="hidden" asp-for="CitizenEmail" />
+                        <input type="hidden" asp-for="Address" />
+                        <input type="hidden" asp-for="WardNumber" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="Status" class="form-label required">Target Workflow Status <span class="text-danger">*</span></label>
+                                <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<CivicResolve.Models.ComplaintStatus>()">
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger small"></span>
+                                <div class="form-text small text-muted">
+                                    Setting to <strong>Resolved</strong> registers completion time and unlocks the citizen feedback survey.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Priority" class="form-label required">Priority Level <span class="text-danger">*</span></label>
+                                <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<CivicResolve.Models.ComplaintPriority>()">
+                                </select>
+                                <span asp-validation-for="Priority" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="DepartmentId" class="form-label required">Assigned Department <span class="text-danger">*</span></label>
+                                <select asp-for="DepartmentId" asp-items="ViewBag.DepartmentList" class="form-select">
+                                </select>
+                                <span asp-validation-for="DepartmentId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="AssignedOfficer" class="form-label">Field Inspector / Crew Lead</label>
+                                <input asp-for="AssignedOfficer" class="form-control" placeholder="e.g. Inspector Ramesh Patil / Squad A" />
+                                <span asp-validation-for="AssignedOfficer" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="OfficerRemarks" class="form-label required">Official Progress Notes / Resolution Summary <span class="text-danger">*</span></label>
+                                <textarea asp-for="OfficerRemarks" rows="4" class="form-control" placeholder="Detail the inspection findings, corrective actions taken, materials used, or justification for rejection..."></textarea>
+                                <span asp-validation-for="OfficerRemarks" class="text-danger small"></span>
+                                <div class="form-text small text-muted">
+                                    These remarks will be visible to the citizen on the public tracking portal and logged into the permanent audit trail.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-left me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg px-5 fw-bold shadow">
+                                <i class="bi bi-check2-circle me-1"></i> Save Status & Record Audit Log
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

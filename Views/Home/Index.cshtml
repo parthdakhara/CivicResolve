@@ -1,0 +1,260 @@
+@{
+    ViewData["Title"] = "Home - Smart Municipal Grievance Redressal";
+    var departments = ViewBag.Departments as List<CivicResolve.Models.Department> ?? new List<CivicResolve.Models.Department>();
+    var recentResolutions = ViewBag.RecentResolutions as List<CivicResolve.Models.Complaint> ?? new List<CivicResolve.Models.Complaint>();
+}
+
+<!-- Hero Banner -->
+<section class="hero-banner shadow-sm">
+    <div class="container position-relative">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="badge bg-primary bg-opacity-25 text-white border border-light border-opacity-25 px-3 py-2 rounded-pill mb-3 fw-semibold">
+                    <i class="bi bi-shield-check me-1"></i> Transparent & Time-Bound Municipal Governance
+                </span>
+                <h1 class="display-4 fw-bold lh-sm mb-3">
+                    Fast, Accountable Municipal Grievance Redressal
+                </h1>
+                <p class="lead text-white-50 mb-4">
+                    Report local civic issues—potholes, garbage, water leaks, or streetlight failures. Track real-time progress under strict Service Level Agreements (SLA).
+                </p>
+
+                <!-- Quick Tracking Form on Hero -->
+                <div class="bg-white p-3 rounded-4 shadow-lg text-dark mb-4">
+                    <form asp-controller="Complaint" asp-action="Track" method="get" class="row g-2 align-items-center">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                                <input type="text" name="q" class="form-control border-start-0 py-2" placeholder="Enter Tracking ID (e.g. CR-2026-10101) or Mobile..." required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                                <i class="bi bi-crosshair me-1"></i> Track Grievance
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <a asp-controller="Complaint" asp-action="Create" class="btn btn-warning btn-lg fw-bold px-4 py-2 text-dark shadow-sm">
+                        <i class="bi bi-plus-circle-fill me-2"></i> File a New Grievance
+                    </a>
+                    <a asp-controller="Home" asp-action="Faq" class="btn btn-outline-light btn-lg px-4 py-2">
+                        <i class="bi bi-info-circle me-1"></i> SLA Norms & Rules
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white text-dark">
+                    <div class="card-header bg-primary text-white py-3 px-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold"><i class="bi bi-activity me-1"></i> Live Portal Activity</span>
+                            <span class="badge bg-success"><i class="bi bi-broadcast"></i> System Online</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3 text-center">
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded-3 border">
+                                    <div class="display-6 fw-bold text-primary">@ViewBag.Total</div>
+                                    <div class="small text-muted fw-semibold">Total Registered</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded-3 border">
+                                    <div class="display-6 fw-bold text-success">@ViewBag.Resolved</div>
+                                    <div class="small text-muted fw-semibold">Resolved Successfully</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded-3 border">
+                                    <div class="display-6 fw-bold text-info">@ViewBag.InProgress</div>
+                                    <div class="small text-muted fw-semibold">In Active Progress</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded-3 border">
+                                    <div class="display-6 fw-bold text-warning">@ViewBag.Pending</div>
+                                    <div class="small text-muted fw-semibold">Under Review</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-3 bg-primary bg-opacity-10 rounded-3 border border-primary border-opacity-25 small">
+                            <div class="d-flex align-items-center gap-2 text-primary fw-bold mb-1">
+                                <i class="bi bi-shield-lock-fill"></i> Municipal Accountability Guarantee
+                            </div>
+                            <div class="text-muted">
+                                Every grievance is tagged with a maximum resolution timeline (12 to 72 hrs). Unresolved cases escalate directly to the Commissioner.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4-Step Process Section -->
+<section class="py-5 bg-white border-bottom">
+    <div class="container">
+        <div class="text-center max-w-xl mx-auto mb-5">
+            <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill">CITIZEN CHARTER</span>
+            <h2 class="fw-bold mt-2">How CivicResolve Works</h2>
+            <p class="text-muted">Simple 4-stage transparent workflow connecting your complaint directly with the responsible engineer.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm p-3 text-center">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 64px; height: 64px;">
+                        <i class="bi bi-file-earmark-text-fill fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">1. File Grievance</h5>
+                    <p class="text-muted small">Select your municipal ward, describe the issue, and optionally upload photo evidence.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm p-3 text-center">
+                    <div class="bg-info bg-opacity-10 text-info rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 64px; height: 64px;">
+                        <i class="bi bi-diagram-3-fill fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">2. Smart Routing</h5>
+                    <p class="text-muted small">System auto-assigns the ticket to the respective department head with an SLA timer.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm p-3 text-center">
+                    <div class="bg-warning bg-opacity-10 text-warning rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 64px; height: 64px;">
+                        <i class="bi bi-tools fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">3. Field Action</h5>
+                    <p class="text-muted small">Municipal repair squads inspect the site, perform repair work, and upload completion proof.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm p-3 text-center">
+                    <div class="bg-success bg-opacity-10 text-success rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 64px; height: 64px;">
+                        <i class="bi bi-star-fill fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">4. Verification & Rating</h5>
+                    <p class="text-muted small">Citizen receives resolution confirmation and rates the service quality from 1 to 5 stars.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Municipal Departments Directory -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill">CIVIC DEPARTMENTS</span>
+                <h2 class="fw-bold mt-2 mb-0">Covered Municipal Services</h2>
+            </div>
+            <a asp-controller="Department" asp-action="Index" class="btn btn-outline-primary btn-sm fw-semibold">
+                View All Departments <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var dept in departments)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="card dept-card p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="badge bg-secondary text-uppercase fw-bold">@dept.Code</span>
+                            <span class="small text-muted"><i class="bi bi-person-badge"></i> HOD: @dept.HodName</span>
+                        </div>
+                        <h5 class="fw-bold text-dark mb-2">@dept.Name</h5>
+                        <p class="text-muted small mb-3">@dept.Description</p>
+                        
+                        <div class="border-top pt-3 mt-auto">
+                            <div class="small fw-semibold text-muted mb-2">Available Categories:</div>
+                            <div class="d-flex flex-wrap gap-1">
+                                @foreach (var cat in dept.Categories.Take(3))
+                                {
+                                    <span class="badge bg-light text-dark border">@cat.Name</span>
+                                }
+                                @if (dept.Categories.Count > 3)
+                                {
+                                    <span class="badge bg-light text-primary border">+@(dept.Categories.Count - 3) more</span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="mt-3 text-end">
+                            <a asp-controller="Complaint" asp-action="Create" class="btn btn-sm btn-link text-decoration-none fw-semibold p-0">
+                                Report Issue in this Dept <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Transparent Resolutions Showcase -->
+@if (recentResolutions.Any())
+{
+    <section class="py-5 bg-white border-top">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <div>
+                    <span class="badge bg-success bg-opacity-10 text-success fw-semibold px-3 py-2 rounded-pill">TRANSPARENCY IN ACTION</span>
+                    <h2 class="fw-bold mt-2 mb-0">Recently Resolved Grievances</h2>
+                </div>
+                <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    Public Grievance Log <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="row g-4">
+                @foreach (var r in recentResolutions)
+                {
+                    <div class="col-md-6">
+                        <div class="card border rounded-3 p-3 h-100 shadow-sm">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-light text-dark border fw-bold">@r.TrackingNumber</span>
+                                <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i> Resolved</span>
+                            </div>
+                            <h6 class="fw-bold mb-1">@r.Title</h6>
+                            <p class="text-muted small mb-2 text-truncate">@r.Description</p>
+                            <div class="small text-muted mb-2">
+                                <i class="bi bi-geo-alt-fill text-danger me-1"></i> Ward @r.WardNumber • @r.Address
+                            </div>
+                            <div class="p-2 bg-light rounded-2 small text-secondary border">
+                                <strong>Official Action:</strong> @r.OfficerRemarks
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<!-- CTA Banner -->
+<section class="py-5 bg-primary text-white text-center">
+    <div class="container py-3">
+        <h2 class="display-6 fw-bold mb-3">Notice an Issue in Your Neighborhood?</h2>
+        <p class="lead text-white-50 max-w-xl mx-auto mb-4">
+            Help us maintain clean, safe, and efficient municipal infrastructure. It takes less than 2 minutes to report a problem.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a asp-controller="Complaint" asp-action="Create" class="btn btn-warning btn-lg fw-bold text-dark px-4 shadow">
+                <i class="bi bi-pencil-square me-2"></i> File Complaint Now
+            </a>
+            <a asp-controller="Complaint" asp-action="Track" class="btn btn-outline-light btn-lg px-4">
+                <i class="bi bi-search me-2"></i> Track Existing Ticket
+            </a>
+        </div>
+    </div>
+</section>

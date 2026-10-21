@@ -1,0 +1,117 @@
+@model List<CivicResolve.Models.Department>
+@{
+    ViewData["Title"] = "Citizen Charter & SLA Norms";
+}
+
+<div class="container py-4">
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb small">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Citizen Charter & SLA</li>
+            </ol>
+        </nav>
+        <h2 class="fw-bold"><i class="bi bi-clock-history text-primary me-2"></i> Service Level Agreements (SLA) & Rules</h2>
+        <p class="text-muted">Know your rights as a municipal resident. All civic complaints are legally tracked under time-bound redressal mandates.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <h4 class="fw-bold mb-3"><i class="bi bi-shield-check text-success me-2"></i> Municipal SLA Resolution Matrix</h4>
+                <p class="text-muted small">The following resolution timeframes are enforced. Tickets breaching these limits automatically escalate to zonal supervisors.</p>
+
+                <div class="accordion" id="slaAccordion">
+                    @foreach (var dept in Model)
+                    {
+                        var collapseId = $"collapse_{dept.Id}";
+                        <div class="accordion-item mb-2 border rounded-3 overflow-hidden">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId">
+                                    <span class="badge bg-secondary me-2">@dept.Code</span>
+                                    @dept.Name
+                                    <span class="badge bg-light text-dark border ms-auto me-2">@dept.Categories.Count Categories</span>
+                                </button>
+                            </h2>
+                            <div id="@collapseId" class="accordion-collapse collapse" data-bs-parent="#slaAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle mb-0 small">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Grievance Category</th>
+                                                    <th>Target Resolution (SLA)</th>
+                                                    <th>Escalation Level</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var cat in dept.Categories)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <strong>@cat.Name</strong>
+                                                            @if (!string.IsNullOrEmpty(cat.Description))
+                                                            {
+                                                                <div class="text-muted small">@cat.Description</div>
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-primary">@cat.SlaHours Hours</span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-warning text-dark">Ward HOD: @dept.HodName</span>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- FAQs -->
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h4 class="fw-bold mb-3"><i class="bi bi-question-circle text-primary me-2"></i> Frequently Asked Questions</h4>
+
+                <div class="mb-3 border-bottom pb-3">
+                    <h6 class="fw-bold">How do I track the progress of my filed complaint?</h6>
+                    <p class="text-muted small mb-0">Every grievance submitted on CivicResolve generates a unique tracking code (e.g., <code>CR-2026-10101</code>). You can input this code in the <strong>Track Status</strong> section to view site photos, engineer notes, and stage progress.</p>
+                </div>
+
+                <div class="mb-3 border-bottom pb-3">
+                    <h6 class="fw-bold">What happens if a complaint is not resolved within the SLA window?</h6>
+                    <p class="text-muted small mb-0">If the SLA deadline expires, the grievance is highlighted in red as <strong>Overdue</strong> on the Commissioner's dashboard and flagged for priority review during the weekly municipal committee meeting.</p>
+                </div>
+
+                <div class="mb-3 border-bottom pb-3">
+                    <h6 class="fw-bold">Can I attach photos or PDF documents to prove the grievance?</h6>
+                    <p class="text-muted small mb-0">Yes! The portal allows attaching JPG, PNG, or PDF files up to 5 MB. Photos showing landmarks and scale of the problem significantly speed up field inspections.</p>
+                </div>
+
+                <div>
+                    <h6 class="fw-bold">Is citizen feedback mandatory upon resolution?</h6>
+                    <p class="text-muted small mb-0">Citizen feedback is optional but strongly recommended. Your 1-to-5 star rating directly affects the performance appraisal of the assigned zonal department engineer.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-primary text-white">
+                <h5 class="fw-bold mb-3"><i class="bi bi-headset me-2"></i> Need Immediate Help?</h5>
+                <p class="small text-white-50">For critical emergencies such as live electrical fires, severe gas leaks, or bridge hazards, contact emergency command dispatch:</p>
+                <div class="bg-white bg-opacity-10 p-3 rounded-3 mb-3 border border-white border-opacity-25">
+                    <div class="small text-warning fw-bold">Emergency Control Room</div>
+                    <div class="fs-4 fw-bold">1800-200-4567</div>
+                    <div class="small text-white-50">Toll-free • 24x7 Active</div>
+                </div>
+                <a asp-controller="Complaint" asp-action="Create" class="btn btn-warning w-100 fw-bold text-dark">
+                    Lodge Online Grievance
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

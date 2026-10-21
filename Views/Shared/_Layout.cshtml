@@ -1,0 +1,242 @@
+@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CivicResolve Municipal Redressal</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+    <!-- Top Utility Bar -->
+    <div class="top-nav-bar text-white py-1 small">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <span class="badge bg-warning text-dark me-2"><i class="bi bi-shield-check"></i> Official Portal</span>
+                <span>Municipal Corporation Citizen Services & Grievance Redressal System</span>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <span><i class="bi bi-telephone-fill me-1"></i> Helpline: <strong>1800-200-4567</strong> (24x7)</span>
+                <span class="d-none d-md-inline text-white-50">|</span>
+                <span class="d-none d-md-inline"><i class="bi bi-clock-fill me-1"></i> SLA Target: 24-48 Hrs</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="sticky-top bg-white shadow-sm border-bottom">
+        <nav class="navbar navbar-expand-lg navbar-light py-2">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                    <div class="brand-icon bg-primary text-white rounded-3 d-flex align-items-center justify-content-center shadow-sm">
+                        <i class="bi bi-buildings-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <span class="fw-bold fs-4 text-primary tracking-tight d-block lh-1">Civic<span class="text-dark">Resolve</span></span>
+                        <span class="text-muted small fw-medium">Smart Municipal Redressal</span>
+                    </div>
+                </a>
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 fw-medium">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door me-1"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Complaint" asp-action="Create">
+                                <i class="bi bi-megaphone-fill text-danger me-1"></i> Lodge Grievance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Complaint" asp-action="Track">
+                                <i class="bi bi-search me-1"></i> Track Status
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Complaint" asp-action="MyComplaints">
+                                <i class="bi bi-person-lines-fill me-1"></i> My Grievances
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Department" asp-action="Index">
+                                <i class="bi bi-grid-fill me-1"></i> Departments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Faq">
+                                <i class="bi bi-question-circle me-1"></i> FAQs & SLA
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <!-- Admin / Officer Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary btn-sm dropdown-toggle d-flex align-items-center gap-1 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-shield-lock-fill"></i> Municipal Desk
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                                <li class="dropdown-header text-uppercase small fw-bold text-muted">Officer Administration</li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" asp-controller="Admin" asp-action="Dashboard">
+                                        <i class="bi bi-speedometer2 text-primary"></i> Analytics Dashboard
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" asp-controller="Admin" asp-action="Index">
+                                        <i class="bi bi-list-check text-success"></i> Manage All Grievances
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" asp-controller="Admin" asp-action="ExportCsv">
+                                        <i class="bi bi-file-earmark-spreadsheet text-info"></i> Export Grievance Report (.csv)
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="dropdown-header text-uppercase small fw-bold text-muted">Master Setup</li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" asp-controller="Department" asp-action="Index">
+                                        <i class="bi bi-diagram-3-fill text-warning"></i> Departments & Categories
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Direct Call to Action -->
+                        <a asp-controller="Complaint" asp-action="Create" class="btn btn-primary btn-sm fw-semibold shadow-sm px-3">
+                            <i class="bi bi-plus-circle-fill me-1"></i> File Complaint
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Global Flash Notifications (TempData) -->
+    <div class="container mt-3">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show shadow-sm d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill fs-5 me-2 text-success"></i>
+                <div class="flex-grow-1">
+                    @TempData["SuccessMessage"]
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill fs-5 me-2 text-danger"></i>
+                <div class="flex-grow-1">
+                    @TempData["ErrorMessage"]
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["InfoMessage"] != null)
+        {
+            <div class="alert alert-info alert-dismissible fade show shadow-sm d-flex align-items-center" role="alert">
+                <i class="bi bi-info-circle-fill fs-5 me-2 text-info"></i>
+                <div class="flex-grow-1">
+                    @TempData["InfoMessage"]
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+
+    <!-- Main Body Content -->
+    <main role="main" class="flex-grow-1">
+        @RenderBody()
+    </main>
+
+    <!-- Municipal Portal Footer -->
+    <footer class="footer-custom text-white pt-5 pb-3 mt-5">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="bg-primary text-white rounded-3 p-2 d-inline-flex">
+                            <i class="bi bi-buildings-fill fs-4"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">CivicResolve</h5>
+                    </div>
+                    <p class="text-white-50 small mb-3">
+                        Municipal Smart Grievance & Complaint Redressal Portal. Bridging citizens and municipal departments through transparent, time-bound, and verifiable service delivery.
+                    </p>
+                    <div class="d-flex gap-2 text-white-50 small">
+                        <span class="badge bg-secondary"><i class="bi bi-shield-check"></i> Official Municipal Portal</span>
+                        <span class="badge bg-secondary"><i class="bi bi-clock-history"></i> Citizen Charter SLA</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="fw-bold text-uppercase text-warning small mb-3">Quick Navigation</h6>
+                    <ul class="list-unstyled footer-links small">
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Index"><i class="bi bi-chevron-right me-1"></i> Home Portal</a></li>
+                        <li class="mb-2"><a asp-controller="Complaint" asp-action="Create"><i class="bi bi-chevron-right me-1"></i> Lodge Grievance</a></li>
+                        <li class="mb-2"><a asp-controller="Complaint" asp-action="Track"><i class="bi bi-chevron-right me-1"></i> Track by ID</a></li>
+                        <li class="mb-2"><a asp-controller="Complaint" asp-action="MyComplaints"><i class="bi bi-chevron-right me-1"></i> My Grievances</a></li>
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Faq"><i class="bi bi-chevron-right me-1"></i> SLA Norms & FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="fw-bold text-uppercase text-warning small mb-3">Emergency Helplines</h6>
+                    <ul class="list-unstyled footer-contact small text-white-50">
+                        <li class="mb-2"><strong class="text-white">Water Pipeline Burst:</strong> 1916</li>
+                        <li class="mb-2"><strong class="text-white">Live Wire / Electric Hazard:</strong> 1912</li>
+                        <li class="mb-2"><strong class="text-white">Solid Waste Dump Clearance:</strong> 1800-222-333</li>
+                        <li class="mb-2"><strong class="text-white">Disaster / Flood Control:</strong> 1077</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="fw-bold text-uppercase text-warning small mb-3">Municipal Headquarters</h6>
+                    <ul class="list-unstyled footer-contact small text-white-50">
+                        <li class="mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Central Municipal Building, Main Avenue</li>
+                        <li class="mb-2"><i class="bi bi-clock-fill text-warning me-1"></i> Public Helpdesk: Mon - Sat (9:00 AM - 5:30 PM)</li>
+                        <li class="mb-2"><i class="bi bi-envelope-fill text-info me-1"></i> support@civicresolve.gov.in</li>
+                        <li class="mb-2"><i class="bi bi-shield-check text-success me-1"></i> 24x7 Digital Redressal Service</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="border-secondary opacity-25 my-4" />
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-white-50">
+                <p class="mb-2 mb-md-0">&copy; 2026 CivicResolve Portal. Municipal Corporation Citizen Services & Grievance Redressal System.</p>
+                <div>
+                    <a asp-controller="Admin" asp-action="Dashboard" class="text-white-50 text-decoration-none me-3"><i class="bi bi-shield-check"></i> Officer Login</a>
+                    <a asp-controller="Home" asp-action="Privacy" class="text-white-50 text-decoration-none">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
