@@ -24,3 +24,5 @@ $RECYCLE.BIN/
 ## Local temporary database journal files
 *.db-shm
 *.db-wal
+
+*.db
