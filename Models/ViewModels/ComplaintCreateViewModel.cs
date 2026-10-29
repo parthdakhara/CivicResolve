@@ -35,12 +35,14 @@ namespace CivicResolve.Models.ViewModels
         public string? Landmark { get; set; }
 
         [Required(ErrorMessage = "Please select the concerned department.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid department.")]
         [Display(Name = "Department")]
-        public int DepartmentId { get; set; }
+        public int? DepartmentId { get; set; }
 
         [Required(ErrorMessage = "Please select the grievance category.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid grievance category.")]
         [Display(Name = "Grievance Category")]
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         [Required(ErrorMessage = "Please specify the urgency/priority level.")]
         [Display(Name = "Severity / Priority")]

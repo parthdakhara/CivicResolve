@@ -98,8 +98,8 @@
 
                                 <div class="col-md-6">
                                     <label asp-for="CategoryId" class="form-label required">Grievance Category <span class="text-danger">*</span></label>
-                                    <select asp-for="CategoryId" class="form-select" id="categorySelect" disabled>
-                                        <option value="">-- Select department first --</option>
+                                    <select asp-for="CategoryId" asp-items="ViewBag.CategoryList" class="form-select" id="categorySelect">
+                                        <option value="">-- Choose Category --</option>
                                     </select>
                                     <span asp-validation-for="CategoryId" class="text-danger small"></span>
                                     <div id="slaNotice" class="small text-info mt-1" style="display:none;"></div>
@@ -196,6 +196,11 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
+            // Ensure select is never disabled when submitting
+            $('#grievanceForm').on('submit', function () {
+                $('#categorySelect').prop('disabled', false);
+            });
+
             // Cascading Dropdown: Load categories when department changes
             $('#departmentSelect').change(function () {
                 var deptId = $(this).val();
@@ -206,7 +211,7 @@
                 $slaNotice.hide();
 
                 if (deptId) {
-                    $catSelect.prop('disabled', true).append('<option value="">Loading categories...</option>');
+                    $catSelect.append('<option value="">Loading categories...</option>');
 
                     $.getJSON('/Complaint/GetCategoriesByDepartment', { departmentId: deptId }, function (data) {
                         $catSelect.empty().append('<option value="">-- Choose Category --</option>');
@@ -219,15 +224,19 @@
                                     'data-desc': cat.description
                                 }));
                             });
-                            $catSelect.prop('disabled', false);
                         } else {
                             $catSelect.append('<option value="">No categories found</option>');
                         }
                     });
                 } else {
-                    $catSelect.append('<option value="">-- Select department first --</option>').prop('disabled', true);
+                    $catSelect.append('<option value="">-- Choose Category --</option>');
                 }
             });
+
+            // If department is already chosen on load (e.g. on postback)
+            if ($('#departmentSelect').val() && $('#categorySelect option').length <= 1) {
+                $('#departmentSelect').trigger('change');
+            }
 
             // Display SLA info when category is picked
             $('#categorySelect').change(function () {

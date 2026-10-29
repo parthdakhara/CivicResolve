@@ -33,6 +33,18 @@ namespace CivicResolve.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ComplaintCreateViewModel model)
         {
+            // Validate Foreign Keys exist in database
+            if (!model.DepartmentId.HasValue || !await _context.Departments.AnyAsync(d => d.Id == model.DepartmentId.Value && d.IsActive))
+            {
+                ModelState.AddModelError("DepartmentId", "Please select a valid municipal department.");
+            }
+
+            var category = model.CategoryId.HasValue ? await _context.Categories.FindAsync(model.CategoryId.Value) : null;
+            if (category == null || (model.DepartmentId.HasValue && category.DepartmentId != model.DepartmentId.Value))
+            {
+                ModelState.AddModelError("CategoryId", "Please select a valid grievance category for the chosen department.");
+            }
+
             // Validate File Upload if present
             if (model.Attachment != null)
             {
@@ -53,6 +65,14 @@ namespace CivicResolve.Controllers
             if (!ModelState.IsValid)
             {
                 await PopulateDepartmentsDropDownAsync(model.DepartmentId);
+                if (model.DepartmentId.HasValue)
+                {
+                    var catList = await _context.Categories
+                        .Where(c => c.DepartmentId == model.DepartmentId.Value)
+                        .OrderBy(c => c.Name)
+                        .ToListAsync();
+                    ViewBag.CategoryList = new SelectList(catList, "Id", "Name", model.CategoryId);
+                }
                 return View(model);
             }
 
@@ -65,7 +85,6 @@ namespace CivicResolve.Controllers
             } while (await _context.Complaints.AnyAsync(c => c.TrackingNumber == trackingNumber));
 
             // Determine SLA Deadline from Category
-            var category = await _context.Categories.FindAsync(model.CategoryId);
             int slaHours = category?.SlaHours ?? 48;
             var slaDeadline = DateTime.UtcNow.AddHours(slaHours);
 
@@ -100,8 +119,8 @@ namespace CivicResolve.Controllers
                 WardNumber = model.WardNumber,
                 Address = model.Address.Trim(),
                 Landmark = model.Landmark?.Trim(),
-                DepartmentId = model.DepartmentId,
-                CategoryId = model.CategoryId,
+                DepartmentId = model.DepartmentId!.Value,
+                CategoryId = model.CategoryId!.Value,
                 Priority = model.Priority,
                 Status = ComplaintStatus.Submitted,
                 Title = model.Title.Trim(),
