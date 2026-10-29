@@ -359,53 +359,51 @@
             color: #475569;
         }
 
-        /* UI Mockup Presentation Cards */
-        .ui-mockup-frame {
+        /* Real Application Screenshots */
+        .real-screenshot-card {
+            background: #ffffff;
             border: 1px solid #cbd5e1;
             border-radius: 8px;
             overflow: hidden;
-            background: #ffffff;
-            box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.08);
-            margin-bottom: 10px;
+            margin-bottom: 11px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
-        .ui-mockup-header {
-            background: #0f172a;
+        .screenshot-label {
+            background: #0f2b48;
+            color: #ffffff;
             padding: 5px 10px;
+            font-size: 9.5px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 6px;
         }
 
-        .ui-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-        }
-
-        .ui-dot-red { background: #ef4444; }
-        .ui-dot-yellow { background: #f59e0b; }
-        .ui-dot-green { background: #10b981; }
-
-        .ui-browser-url {
-            background: #1e293b;
+        .screenshot-url {
             color: #94a3b8;
-            border-radius: 4px;
-            padding: 2px 8px;
-            font-size: 8.5px;
             font-family: 'JetBrains Mono', monospace;
-            margin-left: 8px;
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1px 6px;
+            border-radius: 3px;
         }
 
-        .ui-mockup-body {
-            background: #ffffff;
-            padding: 9px 11px;
-            font-size: 10.5px;
-            color: #334155;
+        .screenshot-wrapper {
+            position: relative;
+            background: #f1f5f9;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .real-screenshot-img {
+            width: 100%;
+            height: auto;
+            max-height: 195px;
+            display: block;
+            object-fit: cover;
+            object-position: top;
+            border-top: 1px solid #e2e8f0;
         }
 
         /* Metrics Grid */
@@ -790,190 +788,54 @@
             <!-- ================= COLUMN 3 ================= -->
             <div class="col-right">
 
-                <!-- 6. Application UI Showcase -->
+                <!-- 6. Application UI Showcase (Real App Screenshots) -->
                 <div class="poster-card">
                     <div class="card-head">
                         <div class="card-num">6</div>
-                        <h2 class="card-title">Application Screenshots & UI Showcase</h2>
+                        <h2 class="card-title">Live Application Screenshots</h2>
                     </div>
-                    <div class="card-content">
-                        <!-- UI Frame 1: Officer Command Dashboard -->
-                        <div class="ui-mockup-frame">
-                            <div class="ui-mockup-header">
-                                <div class="ui-dot ui-dot-red"></div>
-                                <div class="ui-dot ui-dot-yellow"></div>
-                                <div class="ui-dot ui-dot-green"></div>
-                                <div class="ui-browser-url"><i class="bi bi-lock-fill text-success me-1"></i> http://localhost:5241/Admin/Dashboard</div>
+                    <div class="card-content" style="padding: 10px 14px;">
+                        <!-- Screenshot 1: Municipal Officer Analytics Dashboard -->
+                        <div class="real-screenshot-card">
+                            <div class="screenshot-label">
+                                <span><i class="bi bi-speedometer2 text-warning me-1"></i> <strong>Officer Analytics & Command Dashboard</strong></span>
+                                <span class="screenshot-url">/Admin/Dashboard</span>
                             </div>
-                            <div class="ui-mockup-body">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                                    <strong style="color: #0f2b48; font-size: 11px;"><i class="bi bi-speedometer2 text-primary me-1"></i> Command Console & Analytics</strong>
-                                    <span style="background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-size: 8.5px; font-weight: 700;">Role: Commissioner</span>
-                                </div>
-                                <!-- 4 KPI Metric Cards -->
-                                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 6px; text-align: center;">
-                                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 3px 2px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #0f2b48;">48</div>
-                                        <div style="font-size: 7.5px; color: #64748b; font-weight: 600;">Total</div>
-                                    </div>
-                                    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px; padding: 3px 2px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #0284c7;">14</div>
-                                        <div style="font-size: 7.5px; color: #0369a1; font-weight: 600;">In Action</div>
-                                    </div>
-                                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; padding: 3px 2px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #10b981;">32</div>
-                                        <div style="font-size: 7.5px; color: #15803d; font-weight: 600;">Resolved (67%)</div>
-                                    </div>
-                                    <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 4px; padding: 3px 2px;">
-                                        <div style="font-size: 12px; font-weight: 800; color: #ef4444;">2</div>
-                                        <div style="font-size: 7.5px; color: #b91c1c; font-weight: 600;">SLA Overdue</div>
-                                    </div>
-                                </div>
-                                <!-- Progress Bars -->
-                                <div style="font-size: 8.5px; font-weight: 700; color: #475569; margin-bottom: 3px;">Departmental Resolution Performance:</div>
-                                <div style="margin-bottom: 2px;">
-                                    <div style="display: flex; justify-content: space-between; font-size: 8px; margin-bottom: 1px;">
-                                        <span>ROADS (Potholes & Infrastructure)</span>
-                                        <strong>75%</strong>
-                                    </div>
-                                    <div style="background: #e2e8f0; border-radius: 2px; height: 4px; overflow: hidden;">
-                                        <div style="background: #0284c7; width: 75%; height: 100%;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 8px; margin-bottom: 1px;">
-                                        <span>WATER (Pipeline Burst & Leakage)</span>
-                                        <strong>88%</strong>
-                                    </div>
-                                    <div style="background: #e2e8f0; border-radius: 2px; height: 4px; overflow: hidden;">
-                                        <div style="background: #10b981; width: 88%; height: 100%;"></div>
-                                    </div>
-                                </div>
+                            <div class="screenshot-wrapper">
+                                <img src="screenshots/dashboard.png" alt="Officer Analytics Dashboard" class="real-screenshot-img" />
                             </div>
                         </div>
 
-                        <!-- UI Frame 2: Public Grievance Tracker & Stepper -->
-                        <div class="ui-mockup-frame">
-                            <div class="ui-mockup-header">
-                                <div class="ui-dot ui-dot-red"></div>
-                                <div class="ui-dot ui-dot-yellow"></div>
-                                <div class="ui-dot ui-dot-green"></div>
-                                <div class="ui-browser-url"><i class="bi bi-lock-fill text-success me-1"></i> http://localhost:5241/Complaint/Track?q=CR-2026-10101</div>
+                        <!-- Screenshot 2: Real-Time Public Grievance Tracker & Stepper -->
+                        <div class="real-screenshot-card">
+                            <div class="screenshot-label">
+                                <span><i class="bi bi-search text-info me-1"></i> <strong>Public Grievance Tracker & Visual Stepper</strong></span>
+                                <span class="screenshot-url">/Complaint/Track?q=CR-2026-10101</span>
                             </div>
-                            <div class="ui-mockup-body">
-                                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 3px; margin-bottom: 5px;">
-                                    <div>
-                                        <strong style="color: #0284c7; font-family: 'JetBrains Mono', monospace; font-size: 10.5px;">CR-2026-10101</strong>
-                                        <span style="background: #ffedd5; color: #c2410c; font-size: 8px; padding: 1px 4px; border-radius: 3px; font-weight: 700; margin-left: 3px;">HIGH</span>
-                                    </div>
-                                    <span style="background: #dbeafe; color: #1e40af; font-size: 8.5px; padding: 1px 6px; border-radius: 3px; font-weight: 800;">IN PROGRESS</span>
-                                </div>
-                                <div style="font-weight: 700; font-size: 9.5px; color: #0f172a;">Deep dangerous pothole near school crossing</div>
-                                <div style="font-size: 8.5px; color: #64748b; margin-bottom: 5px;"><i class="bi bi-geo-alt-fill text-danger"></i> Ward 14 • Near Gandhi Garden, Crossroad 4</div>
-                                <!-- Visual Stepper -->
-                                <div class="mini-stepper">
-                                    <div class="mini-step" title="Submitted"><i class="bi bi-check"></i></div>
-                                    <div class="mini-step" title="Under Review"><i class="bi bi-check"></i></div>
-                                    <div class="mini-step" style="background: #0284c7;" title="In Progress">3</div>
-                                    <div class="mini-step" style="background: #e2e8f0; color: #94a3b8;" title="Resolved">4</div>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; font-size: 7.5px; color: #64748b; font-weight: 700; margin-top: -4px; margin-bottom: 5px;">
-                                    <span style="color: #10b981;">Submitted</span>
-                                    <span style="color: #10b981;">Under Review</span>
-                                    <span style="color: #0284c7;">In Progress</span>
-                                    <span style="color: #94a3b8;">Resolved</span>
-                                </div>
-                                <div style="background: #f8fafc; border-left: 3px solid #0284c7; padding: 4px 6px; border-radius: 0 4px 4px 0; font-size: 8.5px;">
-                                    <strong>Field Report:</strong> Cold-mix asphalt repair team dispatched with roller squad. Target: 48h SLA.
-                                </div>
+                            <div class="screenshot-wrapper">
+                                <img src="screenshots/track.png" alt="Public Grievance Tracker" class="real-screenshot-img" />
                             </div>
                         </div>
 
-                        <!-- UI Frame 3: Citizen Grievance Lodging Form -->
-                        <div class="ui-mockup-frame">
-                            <div class="ui-mockup-header">
-                                <div class="ui-dot ui-dot-red"></div>
-                                <div class="ui-dot ui-dot-yellow"></div>
-                                <div class="ui-dot ui-dot-green"></div>
-                                <div class="ui-browser-url"><i class="bi bi-lock-fill text-success me-1"></i> http://localhost:5241/Complaint/Create</div>
+                        <!-- Screenshot 3: Citizen Grievance Lodging Portal -->
+                        <div class="real-screenshot-card">
+                            <div class="screenshot-label">
+                                <span><i class="bi bi-pencil-square text-success me-1"></i> <strong>Citizen Grievance Lodging & Proof Upload</strong></span>
+                                <span class="screenshot-url">/Complaint/Create</span>
                             </div>
-                            <div class="ui-mockup-body">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                                    <strong style="color: #0f2b48; font-size: 10.5px;"><i class="bi bi-pencil-square text-primary me-1"></i> Citizen Grievance Portal</strong>
-                                    <span style="font-size: 8px; color: #10b981; font-weight: 700;"><i class="bi bi-shield-check"></i> Model Validation OK</span>
-                                </div>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 5px;">
-                                    <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 3px; padding: 2px 5px; font-size: 8px;">
-                                        <span style="color: #64748b; display: block;">Citizen Name:</span>
-                                        <strong>Dakhara Parth</strong>
-                                    </div>
-                                    <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 3px; padding: 2px 5px; font-size: 8px;">
-                                        <span style="color: #64748b; display: block;">Mobile (10-Digit):</span>
-                                        <strong>9820123456</strong>
-                                    </div>
-                                    <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 3px; padding: 2px 5px; font-size: 8px;">
-                                        <span style="color: #64748b; display: block;">Department:</span>
-                                        <strong>Roads & Civil Infra</strong>
-                                    </div>
-                                    <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 3px; padding: 2px 5px; font-size: 8px;">
-                                        <span style="color: #64748b; display: block;">Category (SLA):</span>
-                                        <strong>Severe Pothole (48h)</strong>
-                                    </div>
-                                </div>
-                                <div style="background: #f0fdf4; border: 1px dashed #86efac; border-radius: 3px; padding: 3px 6px; display: flex; justify-content: space-between; align-items: center; font-size: 8px;">
-                                    <span><i class="bi bi-image text-success me-1"></i> <strong>Evidence Photo:</strong> pothole_ward14.jpg (2.1 MB)</span>
-                                    <span style="background: #10b981; color: white; padding: 1px 4px; border-radius: 2px; font-size: 7px; font-weight: bold;">Verified</span>
-                                </div>
+                            <div class="screenshot-wrapper">
+                                <img src="screenshots/create.png" alt="Citizen Grievance Lodging" class="real-screenshot-img" />
                             </div>
                         </div>
 
-                        <!-- UI Frame 4: Master Grievance Directory & Filter Table -->
-                        <div class="ui-mockup-frame" style="margin-bottom: 0;">
-                            <div class="ui-mockup-header">
-                                <div class="ui-dot ui-dot-red"></div>
-                                <div class="ui-dot ui-dot-yellow"></div>
-                                <div class="ui-dot ui-dot-green"></div>
-                                <div class="ui-browser-url"><i class="bi bi-lock-fill text-success me-1"></i> http://localhost:5241/Admin/Index</div>
+                        <!-- Screenshot 4: Grievance Directory & Multi-Filter Table -->
+                        <div class="real-screenshot-card" style="margin-bottom: 0;">
+                            <div class="screenshot-label">
+                                <span><i class="bi bi-table text-primary me-1"></i> <strong>Grievance Management & Multi-Parameter Filter</strong></span>
+                                <span class="screenshot-url">/Admin/Index</span>
                             </div>
-                            <div class="ui-mockup-body">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                                    <strong style="color: #0f2b48; font-size: 10.5px;"><i class="bi bi-table text-primary me-1"></i> Multi-Filter Directory & CSV Export</strong>
-                                    <span style="font-size: 8px; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 1px 5px; border-radius: 3px;"><i class="bi bi-file-earmark-spreadsheet text-success"></i> CSV Export</span>
-                                </div>
-                                <table style="width: 100%; border-collapse: collapse; font-size: 8px; margin-top: 3px;">
-                                    <thead>
-                                        <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; text-align: left; color: #475569;">
-                                            <th style="padding: 2px 3px;">ID</th>
-                                            <th style="padding: 2px 3px;">Subject</th>
-                                            <th style="padding: 2px 3px;">Dept</th>
-                                            <th style="padding: 2px 3px;">Status</th>
-                                            <th style="padding: 2px 3px; text-align: right;">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr style="border-bottom: 1px solid #f1f5f9;">
-                                            <td style="padding: 2px 3px; font-family: monospace; font-weight: bold; color: #0284c7;">CR-10101</td>
-                                            <td style="padding: 2px 3px;">Dangerous pothole</td>
-                                            <td style="padding: 2px 3px;"><span style="background: #f1f5f9; padding: 1px 2px; border-radius: 2px;">ROADS</span></td>
-                                            <td style="padding: 2px 3px;"><span style="background: #dbeafe; color: #1e40af; font-size: 7px; padding: 1px 3px; border-radius: 2px; font-weight: bold;">In Progress</span></td>
-                                            <td style="padding: 2px 3px; text-align: right;"><span style="color: #0284c7; font-weight: bold;">Edit</span></td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid #f1f5f9;">
-                                            <td style="padding: 2px 3px; font-family: monospace; font-weight: bold; color: #0284c7;">CR-10102</td>
-                                            <td style="padding: 2px 3px;">Pipeline burst leak</td>
-                                            <td style="padding: 2px 3px;"><span style="background: #f1f5f9; padding: 1px 2px; border-radius: 2px;">WATER</span></td>
-                                            <td style="padding: 2px 3px;"><span style="background: #d1fae5; color: #065f46; font-size: 7px; padding: 1px 3px; border-radius: 2px; font-weight: bold;">Resolved ★5</span></td>
-                                            <td style="padding: 2px 3px; text-align: right;"><span style="color: #64748b; font-weight: bold;">View</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding: 2px 3px; font-family: monospace; font-weight: bold; color: #0284c7;">CR-10103</td>
-                                            <td style="padding: 2px 3px;">Public bin overflow</td>
-                                            <td style="padding: 2px 3px;"><span style="background: #f1f5f9; padding: 1px 2px; border-radius: 2px;">SANIT</span></td>
-                                            <td style="padding: 2px 3px;"><span style="background: #fef3c7; color: #92400e; font-size: 7px; padding: 1px 3px; border-radius: 2px; font-weight: bold;">Submitted</span></td>
-                                            <td style="padding: 2px 3px; text-align: right;"><span style="color: #0284c7; font-weight: bold;">Assign</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="screenshot-wrapper">
+                                <img src="screenshots/manage.png" alt="Grievance Management Directory" class="real-screenshot-img" />
                             </div>
                         </div>
                     </div>
